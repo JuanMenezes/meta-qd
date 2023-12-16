@@ -9,6 +9,7 @@ dag = DAG(
     schedule_interval=None,  # Define o agendamento da DAG (None para execução manual)
     start_date=datetime(2023, 10, 8),  # Define a data de início da DAG
     catchup=False,  # Evita a execução em lote de tarefas antigas
+    tags=["metaqd", "tcc-ufrpe"]
 )
 
 # Função que imprime "Hello, World!"
