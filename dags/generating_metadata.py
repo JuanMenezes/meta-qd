@@ -15,11 +15,6 @@ def analisar_metadados(table_name, csv_path, output_path):
     nulos = df.isnull().sum()
     contagem_valores_distintos = df.nunique()
     num_linhas, num_colunas = df.shape
-    """
-    TODO
-    Na verdade dyype é muito importante porque eu preciso saber se a tabela tem muitas colunas do tipo object porque isso pode fazer
-    com que ela perca mais pontos na minha formula, ja que é um tipo que pode ser qualquer coisa ele também é mais fácil de não ser confiavel
-    """
     # Criar um dicionário para armazenar os metadados
     metadados = {
         "nome_da_tabela": table_name,
@@ -51,6 +46,7 @@ dag = DAG(
     tags=["metaqd", "tcc-ufrpe"]
 )
 
+# TODO preciso deixar mais modular para que os parametros não sejam passados hardcoded, isso em outras partes do código também
 csv_path = 'data/ufrpe/Liquidações/liq.csv'  # Substitua pelo caminho do seu arquivo CSV
 output_path = 'data/ufrpe/Liquidações/liq_metadados.json'  # Substitua pelo caminho desejado para o arquivo de metadados
 table_name = 'liquidacoes'
