@@ -28,6 +28,7 @@
         "DESPESAS LIQUIDADAS": "object",
         "DESPESAS LIQUIDADAS A PAGAR": "object"
     },
+    "contador_tipagem": 1,
     "estats_descritivas": {
         "ID Unidade Or\u00e7ament\u00e1ria": {
             "count": 12337.0,
