@@ -12,10 +12,11 @@ def gerar_metadados(table_name, csv_path, output_path):
     # Converter a série de tipos de dados para um dicionário
     tipos_de_dados_dict = tipagem_das_colunas.astype(str).to_dict()
     # Extrair os tipos de dados
-    tipos_de_dados = list(tipagem_das_colunas.values())
-    #TODO preciso pegar a quantidade dos tipos para poder jogar nessa metricas=
-    # Contar a quantidade de cada tipo de dado
+    print(list(tipos_de_dados_dict.values()))
+    # Contar a quantidade de tipos de dados
+    tipos_de_dados = list(tipos_de_dados_dict.values())
     contagem_tipos = Counter(tipos_de_dados)
+
     descricao = df.describe()
     colunas = df.columns.tolist()
     nulos = df.isnull().sum()
@@ -32,7 +33,6 @@ def gerar_metadados(table_name, csv_path, output_path):
         "nome_das_colunas": colunas,
         "valores_nulos_por_coluna": nulos.to_dict(),  # Convertendo Series para dicionário
         "valores_distintos_por_coluna": contagem_valores_distintos.to_dict()
-        #"tipos_de_dados_contagem": tipos_de_dados_contagem.to_dict()
     }
 
     # Salvar as informações em um arquivo JSON
@@ -67,8 +67,8 @@ dag = DAG(
 )
 
 # TODO preciso deixar mais modular para que os parametros não sejam passados hardcoded, isso em outras partes do código também
-csv_path = 'data/ufrpe/Liquidações/liq.csv'  # Substitua pelo caminho do seu arquivo CSV
-output_path = 'data/ufrpe/Liquidações/liq_metadados.json'  # Substitua pelo caminho desejado para o arquivo de metadados
+csv_path = 'data/ufrpe/Liquidações/liq.csv'
+output_path = 'data/ufrpe/Liquidações/liq_metadados.json' 
 table_name = 'liquidacoes'
 
 
