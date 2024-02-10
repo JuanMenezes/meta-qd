@@ -40,7 +40,19 @@ def gerar_metadados(**op_kwargs):
     with open(op_kwargs['output_path'], 'w') as json_file:
         json.dump(metadados, json_file, indent=4)
 
-def avaliacoes_criterios(metadados_files):
+def avaliacoes_criterios(**op_kwargs):
+    print(f'Arquivos de metadados atuais:{op_kwargs["metadados_files_path_list"]}')
+    for file_path in op_kwargs["metadados_files_path_list"]:
+        with open(file_path, 'r') as arquivo:
+            json_metadado = json.load(arquivo)
+        n_colunas = json_metadado['n_colunas']
+        quantidade_object = json_metadado['contador_tipagem'].get("object",0)
+        # Cálculo da métrica de credibilidade total
+        credibilidade_total = (n_colunas - quantidade_object) * 100 / n_colunas
+
+        # Exibição da métrica
+        print(f"Credibilidade da tabela {file_path} foi de :\n {credibilidade_total}%")
+    # TODO agora que eu já consigo trabalhar com os metaddos e gerar métricas interessantes o que me resta é concluir as dimensões
     """
     Credibilidade Total (considerando menos 'object'):
     Proposta: credibilidade_total = (Total Colunas - Colunas do Tipo 'object') * 100 / (Total Colunas)
@@ -49,8 +61,7 @@ def avaliacoes_criterios(metadados_files):
     mais confiável pode ser a tabela como um todo. As colunas do tipo 'object' são tratadas como menos confiáveis, 
     pois podem ter uma variedade maior de valores e podem necessitar de uma análise mais cuidadosa.
     """
-    #TODO preciso gerar mais avaliações de criterios escolhendo logo pelo menos umas 5 dimensões para formular meus gráficos
-    print('A Porcentagem de credibilidade na tabela de liquidações foi ')
+    print(f'A Porcentagem de credibilidade na tabela de ')
     
 
 default_args = {
@@ -67,14 +78,14 @@ dag = DAG(
     tags=["metaqd", "tcc-ufrpe"]
 )
 
-parent_dir = 'data/ufrpe/'
+parent_dir_source = 'data/source/ufrpe/'
 
-# get folders
-folders_names = [folder for folder in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, folder))]
+# Para cada diretorio com dados eu gero os seus respectivos metadados
+folders_names = [folder for folder in os.listdir(parent_dir_source) if os.path.isdir(os.path.join(parent_dir_source, folder))]
 
 for folder_name in folders_names:
-    input_path = f'data/ufrpe/{folder_name}/{folder_name}.csv'
-    output_path = f'data/ufrpe/{folder_name}/{folder_name}_metadados.json' 
+    input_path = f'data/source/ufrpe/{folder_name}/{folder_name}.csv'
+    output_path = f'data/metadata/ufrpe/{folder_name}_metadados.json' 
     table_name = folder_name
 
     gerar_metadados_task = PythonOperator(
@@ -84,10 +95,14 @@ for folder_name in folders_names:
         dag=dag,
     )
 
+parent_dir_metadata = 'data/metadata/ufrpe/'
+
+metadados_files_path = [os.path.join(parent_dir_metadata, file) for file in os.listdir(parent_dir_metadata) if os.path.isfile(os.path.join(parent_dir_metadata, file))]
+
 avaliacoes_criterios_task = PythonOperator(
-    task_id='avaliacoes_criterios',
+    task_id=f'avaliacoes_criterios',
     python_callable=avaliacoes_criterios,
-    op_kwargs={'metadados_files': output_path},
+    op_kwargs={'metadados_files_path_list': metadados_files_path},
     dag=dag,
 )
 # Define a ordem de execução das tarefas
@@ -95,4 +110,3 @@ gerar_metadados_task >> avaliacoes_criterios_task
 
 if __name__ == "__main__":
     dag.cli()
-
