@@ -1,4 +1,5 @@
 import json
+import os
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
@@ -66,16 +67,21 @@ dag = DAG(
     tags=["metaqd", "tcc-ufrpe"]
 )
 
-# TODO preciso deixar mais modular para que os parametros não sejam passados hardcoded, isso em outras partes do código também
-csv_path = 'data/ufrpe/Liquidações/liq.csv'
-output_path = 'data/ufrpe/Liquidações/liq_metadados.json' 
-table_name = 'liquidacoes'
+parent_dir = 'data/ufrpe/'
 
+# get folders
+folders_names = [folder for folder in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, folder))]
 
+for folder_name in folders_names:
+    input_path = f'data/ufrpe/{folder_name}/{folder_name}.csv'
+    output_path = f'data/ufrpe/{folder_name}/{folder_name}_metadados.json' 
+    table_name = folder_name
+
+# TODO ok agora eu tenho isso de forma modular, porém eu preciso passar para ser executado 1 por vez no airflow
 gerar_metadados_task = PythonOperator(
     task_id='gerar_metadados',
     python_callable=gerar_metadados,
-    op_kwargs={'table_name': table_name, 'csv_path': csv_path, 'output_path': output_path},
+    op_kwargs={'table_name': table_name, 'csv_path': input_path, 'output_path': output_path},
     dag=dag,
 )
 
