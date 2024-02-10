@@ -1,0 +1,57 @@
+{
+    "nome_da_tabela": "ensino_de_graduacao",
+    "n_linhas": 62,
+    "n_colunas": 7,
+    "tipagem_das_colunas": {
+        "NOME_CURSO": "object",
+        "MUNICIPIO": "object",
+        "MODALIDADE_EDUCACAO": "object",
+        "TIPO_OFERTA": "object",
+        "AREA_CONHECIMENTO": "object",
+        "CODIGO_INEP": "int64",
+        "GRAU_ACADEMICO": "object"
+    },
+    "contador_tipagem": {
+        "object": 6,
+        "int64": 1
+    },
+    "estats_descritivas": {
+        "CODIGO_INEP": {
+            "count": 62.0,
+            "mean": 641058.1935483871,
+            "std": 1000041.7361258322,
+            "min": 14500.0,
+            "25%": 14513.25,
+            "50%": 108377.5,
+            "75%": 1152653.75,
+            "max": 5000965.0
+        }
+    },
+    "nome_das_colunas": [
+        "NOME_CURSO",
+        "MUNICIPIO",
+        "MODALIDADE_EDUCACAO",
+        "TIPO_OFERTA",
+        "AREA_CONHECIMENTO",
+        "CODIGO_INEP",
+        "GRAU_ACADEMICO"
+    ],
+    "valores_nulos_por_coluna": {
+        "NOME_CURSO": 0,
+        "MUNICIPIO": 0,
+        "MODALIDADE_EDUCACAO": 0,
+        "TIPO_OFERTA": 0,
+        "AREA_CONHECIMENTO": 0,
+        "CODIGO_INEP": 0,
+        "GRAU_ACADEMICO": 0
+    },
+    "valores_distintos_por_coluna": {
+        "NOME_CURSO": 62,
+        "MUNICIPIO": 4,
+        "MODALIDADE_EDUCACAO": 2,
+        "TIPO_OFERTA": 1,
+        "AREA_CONHECIMENTO": 9,
+        "CODIGO_INEP": 58,
+        "GRAU_ACADEMICO": 3
+    }
+}

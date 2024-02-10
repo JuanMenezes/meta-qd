@@ -6,8 +6,8 @@ from datetime import datetime
 import pandas as pd
 from collections import Counter
 
-def gerar_metadados(table_name, csv_path, output_path):
-    df = pd.read_csv(csv_path)
+def gerar_metadados(**op_kwargs):
+    df = pd.read_csv(op_kwargs['input_path'])
     # Coletar metadados
     tipagem_das_colunas = df.dtypes
     # Converter a série de tipos de dados para um dicionário
@@ -25,7 +25,7 @@ def gerar_metadados(table_name, csv_path, output_path):
     num_linhas, num_colunas = df.shape
     # Criar um dicionário para armazenar os metadados
     metadados = {
-        "nome_da_tabela": table_name,
+        "nome_da_tabela": op_kwargs['table_name'],
         "n_linhas": num_linhas,
         "n_colunas": num_colunas,
         "tipagem_das_colunas": tipos_de_dados_dict,
@@ -37,7 +37,7 @@ def gerar_metadados(table_name, csv_path, output_path):
     }
 
     # Salvar as informações em um arquivo JSON
-    with open(output_path, 'w') as json_file:
+    with open(op_kwargs['output_path'], 'w') as json_file:
         json.dump(metadados, json_file, indent=4)
 
 def avaliacoes_criterios(metadados_files):
@@ -77,13 +77,12 @@ for folder_name in folders_names:
     output_path = f'data/ufrpe/{folder_name}/{folder_name}_metadados.json' 
     table_name = folder_name
 
-# TODO ok agora eu tenho isso de forma modular, porém eu preciso passar para ser executado 1 por vez no airflow
-gerar_metadados_task = PythonOperator(
-    task_id='gerar_metadados',
-    python_callable=gerar_metadados,
-    op_kwargs={'table_name': table_name, 'csv_path': input_path, 'output_path': output_path},
-    dag=dag,
-)
+    gerar_metadados_task = PythonOperator(
+        task_id=f'gerar_metadados_{folder_name}',
+        python_callable=gerar_metadados,
+        op_kwargs={'table_name': table_name, 'input_path': input_path, 'output_path': output_path},
+        dag=dag,
+    )
 
 avaliacoes_criterios_task = PythonOperator(
     task_id='avaliacoes_criterios',
