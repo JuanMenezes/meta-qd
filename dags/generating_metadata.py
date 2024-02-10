@@ -45,14 +45,39 @@ def avaliacoes_criterios(**op_kwargs):
     for file_path in op_kwargs["metadados_files_path_list"]:
         with open(file_path, 'r') as arquivo:
             json_metadado = json.load(arquivo)
+        
+        # Cálculo da confiabilidade, precisao, completude, acessibilidade, consistencia
         n_colunas = json_metadado['n_colunas']
         quantidade_object = json_metadado['contador_tipagem'].get("object",0)
-        # Cálculo da métrica de credibilidade total
-        credibilidade_total = (n_colunas - quantidade_object) * 100 / n_colunas
+        confiabilidade = (n_colunas - quantidade_object) * 100 / n_colunas
+        
+        # Cálculo da completude
+        n_colunas = len(json_metadado["valores_nulos_por_coluna"])
+        n_valores_nulos_coluna = sum(value == 0 for value in json_metadado["valores_nulos_por_coluna"].values())
+        completude = (1 - (n_valores_nulos_coluna / n_colunas)) * 100
 
-        # Exibição da métrica
-        print(f"Credibilidade da tabela {file_path} foi de :\n {credibilidade_total}%")
-    # TODO agora que eu já consigo trabalhar com os metaddos e gerar métricas interessantes o que me resta é concluir as dimensões
+        # Cálculo da consistência
+        valores_distintos_por_coluna = json_metadado["valores_distintos_por_coluna"]
+        inconsistencias = sum(value > 10 for value in valores_distintos_por_coluna.values())
+        # Aqui, o 1 é subtraído para enfatizar a consistência. Se não houver inconsistências (inconsistencias=0inconsistencias=0), a fórmula retornará 100100, indicando consistência completa. Se todas as colunas forem inconsistentes, a fórmula retornará 00.
+        consistencia = (1 - (inconsistencias / n_colunas)) * 100
+
+        # Cálculo da precisão
+        precisao = (inconsistencias / n_colunas) * 100
+        # Aqui, não há subtração de 11, pois a precisão é medida diretamente pela proporção de valores distintos em relação ao total de colunas. Essa métrica indica a "precisão" dos dados em termos de diferentes valores presentes.
+
+        # Exibição das métricas
+        print(f"Credibilidade da tabela {file_path} foi de : {confiabilidade}%")
+        print(f"Completude da tabela {file_path} foi de : {completude}%")
+        print(f"Consistência da tabela {file_path} foi de : {consistencia}%\n")
+        print(f"Precisão da tabela {file_path} foi de : {precisao}%")
+
+        #print(f"Precisão da tabela {file_path} foi de : {credibilidade_total}%")
+        # TODO acessbilidade vai dizer sobre as requisições que eu fiz pro site, avaliar se coloco ou não
+        #print(f"Acessibilidade da tabela {file_path} foi de : {credibilidade_total}%")
+        # TODO talvez seja interessante comparar com a UFRN, porque comparar meu modelo com nada fica meio dificil de ser aceito
+
+        # lembrando que os dados gerados vou montar como json para plotar isso em outro código
     """
     Credibilidade Total (considerando menos 'object'):
     Proposta: credibilidade_total = (Total Colunas - Colunas do Tipo 'object') * 100 / (Total Colunas)
@@ -61,8 +86,7 @@ def avaliacoes_criterios(**op_kwargs):
     mais confiável pode ser a tabela como um todo. As colunas do tipo 'object' são tratadas como menos confiáveis, 
     pois podem ter uma variedade maior de valores e podem necessitar de uma análise mais cuidadosa.
     """
-    print(f'A Porcentagem de credibilidade na tabela de ')
-    
+
 
 default_args = {
     'owner': 'airflow',
