@@ -1,1 +1,0 @@
-# Aqui eu vou fazer o plot dos resultados de forma mais organizada

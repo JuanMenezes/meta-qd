@@ -7,7 +7,8 @@ import pandas as pd
 from collections import Counter
 
 def gerar_metadados(**op_kwargs):
-    df = pd.read_csv(op_kwargs['input_path'])
+    df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
+    # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrpe para ,
     # Coletar metadados
     tipagem_das_colunas = df.dtypes
     # Converter a série de tipos de dados para um dicionário
@@ -72,20 +73,7 @@ def avaliacoes_criterios(**op_kwargs):
         print(f"Consistência da tabela {file_path} foi de : {consistencia}%\n")
         print(f"Precisão da tabela {file_path} foi de : {precisao}%")
 
-        #print(f"Precisão da tabela {file_path} foi de : {credibilidade_total}%")
-        # TODO acessbilidade vai dizer sobre as requisições que eu fiz pro site, avaliar se coloco ou não
-        #print(f"Acessibilidade da tabela {file_path} foi de : {credibilidade_total}%")
-        # TODO talvez seja interessante comparar com a UFRN, porque comparar meu modelo com nada fica meio dificil de ser aceito
-
         # lembrando que os dados gerados vou montar como json para plotar isso em outro código
-    """
-    Credibilidade Total (considerando menos 'object'):
-    Proposta: credibilidade_total = (Total Colunas - Colunas do Tipo 'object') * 100 / (Total Colunas)
-    Quanto maior a porcentagem, mais colunas têm tipos de dados mais previsíveis, o que pode indicar maior confiabilidade.
-    Essa métrica reflete a ideia de que quanto mais colunas têm tipos de dados previsíveis (por exemplo, inteiros), 
-    mais confiável pode ser a tabela como um todo. As colunas do tipo 'object' são tratadas como menos confiáveis, 
-    pois podem ter uma variedade maior de valores e podem necessitar de uma análise mais cuidadosa.
-    """
 
 
 default_args = {
@@ -99,17 +87,17 @@ dag = DAG(
     default_args=default_args,
     description='Uma DAG para analisar metadados de um arquivo CSV',
     schedule_interval=None,  # Define a frequência de execução da DAG (None para executar manualmente)
-    tags=["metaqd", "tcc-ufrpe"]
+    tags=["metaqd", "tcc-ufrn"]
 )
 
-parent_dir_source = 'data/source/ufrpe/'
+parent_dir_source = 'data/source/ufrn/'
 
 # Para cada diretorio com dados eu gero os seus respectivos metadados
 folders_names = [folder for folder in os.listdir(parent_dir_source) if os.path.isdir(os.path.join(parent_dir_source, folder))]
 
 for folder_name in folders_names:
-    input_path = f'data/source/ufrpe/{folder_name}/{folder_name}.csv'
-    output_path = f'data/metadata/ufrpe/{folder_name}_metadados.json' 
+    input_path = f'data/source/ufrn/{folder_name}/{folder_name}.csv'
+    output_path = f'data/metadata/ufrn/{folder_name}_metadados.json' 
     table_name = folder_name
 
     gerar_metadados_task = PythonOperator(
@@ -119,7 +107,7 @@ for folder_name in folders_names:
         dag=dag,
     )
 
-parent_dir_metadata = 'data/metadata/ufrpe/'
+parent_dir_metadata = 'data/metadata/ufrn/'
 
 metadados_files_path = [os.path.join(parent_dir_metadata, file) for file in os.listdir(parent_dir_metadata) if os.path.isfile(os.path.join(parent_dir_metadata, file))]
 
