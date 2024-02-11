@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 from airflow import DAG
@@ -10,6 +11,7 @@ def gerar_metadados(**op_kwargs):
     df = pd.read_csv(op_kwargs['input_path'], delimiter=',')
     # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrpe para ,
     # Coletar metadados
+    # TODO Essa tipagem das colunas vai precisar mudar porque object é como o pandas identifica string ou qualquer outra coisa
     tipagem_das_colunas = df.dtypes
     # Converter a série de tipos de dados para um dicionário
     tipos_de_dados_dict = tipagem_das_colunas.astype(str).to_dict()
@@ -29,6 +31,7 @@ def gerar_metadados(**op_kwargs):
         "nome_da_tabela": op_kwargs['table_name'],
         "n_linhas": num_linhas,
         "n_colunas": num_colunas,
+        # TODO mudar tipagem e o contador
         "tipagem_das_colunas": tipos_de_dados_dict,
         "contador_tipagem": contagem_tipos,
         "estats_descritivas": descricao.to_dict(),  # Convertendo DataFrame para dicionário
@@ -67,19 +70,40 @@ def avaliacoes_criterios(**op_kwargs):
         precisao = (inconsistencias / n_colunas)
         # Aqui, não há subtração de 11, pois a precisão é medida diretamente pela proporção de valores distintos em relação ao total de colunas. Essa métrica indica a "precisão" dos dados em termos de diferentes valores presentes.
 
-        # TODO deixar mais modular de forma que facilite a analise, pq hoje tenho agregar os jsons manualmente
-        analysis_tables = {
-            "nome_da_tabela": file_path,
-            "credibilidade": confiabilidade,
-            "completude": completude,
-            "consistencia": consistencia,
-            "precisao": precisao
-        }
-        # lembrando que os dados gerados vou montar como json para plotar isso em outro código
-        # Salvar as informações em um arquivo JSON
-        nome_do_arquivo = os.path.basename(file_path)
-        with open(f'data/analysis/{nome_do_arquivo}', 'w') as json_file:
-            json.dump(analysis_tables, json_file, indent=4)
+
+        # ! Criando o processo de salvar essas métricas em um CSV para plot posterior
+        # Definir o nome do arquivo CSV
+        nome_arquivo_csv = 'data/analysis/metricas_ufrpe.csv'
+
+        # Verificar se o arquivo CSV já existe
+        arquivo_existente = False
+        try:
+            with open(nome_arquivo_csv, 'r'):
+                arquivo_existente = True
+        except FileNotFoundError:
+            pass
+        
+        header = ['nome_da_tabela','confiabilidade', 'completude', 'consistencia', 'precisao']
+        # Abrir o arquivo CSV no modo de adição ('a' para append) ou escrita ('w' para escrever) se o arquivo não existir
+        modo_abertura = 'a' if arquivo_existente else 'w'
+
+        # Abrir o arquivo CSV
+        with open(nome_arquivo_csv, mode=modo_abertura, newline='') as file:
+            writer = csv.writer(file)
+
+            # Se o arquivo não existir, escrever o cabeçalho
+            if not arquivo_existente:
+                writer.writerow(header)
+            
+            # Adicionar a linha ao arquivo CSV
+            parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path)
+            nome_da_tabela = str(nome_arquivo_sem_extensao.split(".")[0])
+
+            writer.writerow([f"ufrpe_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
+            print(f'Dados adicionados ao arquivo CSV "{nome_arquivo_csv}" com sucesso.')
+
+            # lembrando que os dados gerados vou montar como json para plotar isso em outro código
+            # Salvar as informações em um arquivo JSON
 
 default_args = {
     'owner': 'airflow',
@@ -92,7 +116,7 @@ dag = DAG(
     default_args=default_args,
     description='Uma DAG para analisar metadados de um arquivo CSV',
     schedule_interval=None,  # Define a frequência de execução da DAG (None para executar manualmente)
-    tags=["metaqd", "tcc-ufrpe"]
+    tags=["metaqd", "tcc"]
 )
 
 parent_dir_source = 'data/source/ufrpe/'
