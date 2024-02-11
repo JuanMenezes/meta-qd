@@ -10,8 +10,8 @@ from collections import Counter
 def gerar_metadados(**op_kwargs):
     df = pd.read_csv(op_kwargs['input_path'], delimiter=',')
     # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrpe para ,
+    
     # Coletar metadados
-    # TODO Essa tipagem das colunas vai precisar mudar porque object é como o pandas identifica string ou qualquer outra coisa
     tipagem_das_colunas = df.dtypes
     # Converter a série de tipos de dados para um dicionário
     tipos_de_dados_dict = tipagem_das_colunas.astype(str).to_dict()
@@ -31,7 +31,6 @@ def gerar_metadados(**op_kwargs):
         "nome_da_tabela": op_kwargs['table_name'],
         "n_linhas": num_linhas,
         "n_colunas": num_colunas,
-        # TODO mudar tipagem e o contador
         "tipagem_das_colunas": tipos_de_dados_dict,
         "contador_tipagem": contagem_tipos,
         "estats_descritivas": descricao.to_dict(),  # Convertendo DataFrame para dicionário
