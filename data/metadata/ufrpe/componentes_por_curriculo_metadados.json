@@ -1,0 +1,123 @@
+{
+    "nome_da_tabela": "componentes_por_curriculo",
+    "n_linhas": 4846,
+    "n_colunas": 11,
+    "tipagem_das_colunas": {
+        "NOME_CURSO": "object",
+        "CODIGO_CURRICULO": "object",
+        "SEMESTRE_CONCLUSAO_MAX": "int64",
+        "SEMESTRE_CONCLUSAO_IDEAL": "int64",
+        "SEMESTRE_CONCLUSAO_MIN": "int64",
+        "ANO_ENTRADA_VIGOR": "int64",
+        "PERIODO_ENTRADA_VIGOR": "int64",
+        "CODIGO_COMPONENTE": "object",
+        "NOME_COMPONENTE": "object",
+        "SEMESTRE_OFERTA_COMPONENTE": "int64",
+        "TIPO_VINCULO": "object"
+    },
+    "contador_tipagem": {
+        "object": 5,
+        "int64": 6
+    },
+    "estats_descritivas": {
+        "SEMESTRE_CONCLUSAO_MAX": {
+            "count": 4846.0,
+            "mean": 9.39702847709451,
+            "std": 1.0251851462647164,
+            "min": 6.0,
+            "25%": 9.0,
+            "50%": 10.0,
+            "75%": 10.0,
+            "max": 11.0
+        },
+        "SEMESTRE_CONCLUSAO_IDEAL": {
+            "count": 4846.0,
+            "mean": 9.420553033429632,
+            "std": 0.9683231511487536,
+            "min": 6.0,
+            "25%": 9.0,
+            "50%": 10.0,
+            "75%": 10.0,
+            "max": 11.0
+        },
+        "SEMESTRE_CONCLUSAO_MIN": {
+            "count": 4846.0,
+            "mean": 15.86545604622369,
+            "std": 1.55519551643917,
+            "min": 10.0,
+            "25%": 15.0,
+            "50%": 17.0,
+            "75%": 17.0,
+            "max": 18.0
+        },
+        "ANO_ENTRADA_VIGOR": {
+            "count": 4846.0,
+            "mean": 2014.1460998761866,
+            "std": 10.907421293553249,
+            "min": 1900.0,
+            "25%": 2010.0,
+            "50%": 2016.0,
+            "75%": 2019.0,
+            "max": 2022.0
+        },
+        "PERIODO_ENTRADA_VIGOR": {
+            "count": 4846.0,
+            "mean": 1.4698720594304582,
+            "std": 0.49914298496317233,
+            "min": 1.0,
+            "25%": 1.0,
+            "50%": 1.0,
+            "75%": 2.0,
+            "max": 2.0
+        },
+        "SEMESTRE_OFERTA_COMPONENTE": {
+            "count": 4846.0,
+            "mean": 2.668179942220388,
+            "std": 3.04491432897763,
+            "min": 0.0,
+            "25%": 0.0,
+            "50%": 1.0,
+            "75%": 5.0,
+            "max": 11.0
+        }
+    },
+    "nome_das_colunas": [
+        "NOME_CURSO",
+        "CODIGO_CURRICULO",
+        "SEMESTRE_CONCLUSAO_MAX",
+        "SEMESTRE_CONCLUSAO_IDEAL",
+        "SEMESTRE_CONCLUSAO_MIN",
+        "ANO_ENTRADA_VIGOR",
+        "PERIODO_ENTRADA_VIGOR",
+        "CODIGO_COMPONENTE",
+        "NOME_COMPONENTE",
+        "SEMESTRE_OFERTA_COMPONENTE",
+        "TIPO_VINCULO"
+    ],
+    "valores_nulos_por_coluna": {
+        "NOME_CURSO": 0,
+        "CODIGO_CURRICULO": 0,
+        "SEMESTRE_CONCLUSAO_MAX": 0,
+        "SEMESTRE_CONCLUSAO_IDEAL": 0,
+        "SEMESTRE_CONCLUSAO_MIN": 0,
+        "ANO_ENTRADA_VIGOR": 0,
+        "PERIODO_ENTRADA_VIGOR": 0,
+        "CODIGO_COMPONENTE": 0,
+        "NOME_COMPONENTE": 0,
+        "SEMESTRE_OFERTA_COMPONENTE": 0,
+        "TIPO_VINCULO": 0
+    },
+    "valores_distintos_por_coluna": {
+        "NOME_CURSO": 46,
+        "CODIGO_CURRICULO": 63,
+        "SEMESTRE_CONCLUSAO_MAX": 5,
+        "SEMESTRE_CONCLUSAO_IDEAL": 5,
+        "SEMESTRE_CONCLUSAO_MIN": 5,
+        "ANO_ENTRADA_VIGOR": 17,
+        "PERIODO_ENTRADA_VIGOR": 2,
+        "CODIGO_COMPONENTE": 2836,
+        "NOME_COMPONENTE": 2534,
+        "SEMESTRE_OFERTA_COMPONENTE": 12,
+        "TIPO_VINCULO": 2
+    }
+}
