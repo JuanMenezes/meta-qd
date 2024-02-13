@@ -8,25 +8,24 @@ import pandas as pd
 from collections import Counter
 
 def gerar_metadados(**op_kwargs):
-    df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
-    # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrn para ,
-    
-    # Coletar metadados
+    df = pd.read_csv(op_kwargs['input_path'])
+    # ! quando for para rodar os dados da ufrpe o delimiter que ser modificado para ; e quando for ufrpe para ,
+    # Coleta metadados
     tipagem_das_colunas = df.dtypes
-    # Converter a série de tipos de dados para um dicionário
+    # Converte a série de tipos de dados para um dicionário
     tipos_de_dados_dict = tipagem_das_colunas.astype(str).to_dict()
-    # Extrair os tipos de dados
+    # Extrai os tipos de dados
     print(list(tipos_de_dados_dict.values()))
-    # Contar a quantidade de tipos de dados
+    # Conta a quantidade de tipos de dados
     tipos_de_dados = list(tipos_de_dados_dict.values())
     contagem_tipos = Counter(tipos_de_dados)
 
     descricao = df.describe()
     colunas = df.columns.tolist()
     nulos = df.isnull().sum()
-    contagem_valores_distintos = df.nunique()
+    cont_valores_dist = df.nunique()
     num_linhas, num_colunas = df.shape
-    # Criar um dicionário para armazenar os metadados
+    # Cria um dicionário para armazenar os metadados
     metadados = {
         "nome_da_tabela": op_kwargs['table_name'],
         "n_linhas": num_linhas,
@@ -36,10 +35,10 @@ def gerar_metadados(**op_kwargs):
         "estats_descritivas": descricao.to_dict(),  # Convertendo DataFrame para dicionário
         "nome_das_colunas": colunas,
         "valores_nulos_por_coluna": nulos.to_dict(),  # Convertendo Series para dicionário
-        "valores_distintos_por_coluna": contagem_valores_distintos.to_dict()
+        "valores_distintos_por_coluna": cont_valores_dist.to_dict()
     }
 
-    # Salvar as informações em um arquivo JSON
+    # Salva as informações em um arquivo JSON
     with open(op_kwargs['output_path'], 'w') as json_file:
         json.dump(metadados, json_file, indent=4)
 
@@ -72,7 +71,7 @@ def avaliacoes_criterios(**op_kwargs):
 
         # ! Criando o processo de salvar essas métricas em um CSV para plot posterior
         # Definir o nome do arquivo CSV
-        nome_arquivo_csv = 'data/analysis/metricas_ufrn.csv'
+        nome_arquivo_csv = 'data/analysis/metricas_ufrpe.csv'
 
         # Verificar se o arquivo CSV já existe
         arquivo_existente = False
@@ -98,7 +97,7 @@ def avaliacoes_criterios(**op_kwargs):
             parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path)
             nome_da_tabela = str(nome_arquivo_sem_extensao.split(".")[0])
 
-            writer.writerow([f"ufrn_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
+            writer.writerow([f"ufrpe_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
             print(f'Dados adicionados ao arquivo CSV "{nome_arquivo_csv}" com sucesso.')
 
             # lembrando que os dados gerados vou montar como json para plotar isso em outro código
@@ -118,14 +117,14 @@ dag = DAG(
     tags=["metaqd", "tcc"]
 )
 
-parent_dir_source = 'data/source/ufrn/'
+parent_dir_source = 'data/source/ufrpe/'
 
 # Para cada diretorio com dados eu gero os seus respectivos metadados
 folders_names = [folder for folder in os.listdir(parent_dir_source) if os.path.isdir(os.path.join(parent_dir_source, folder))]
 
 for folder_name in folders_names:
-    input_path = f'data/source/ufrn/{folder_name}/{folder_name}.csv'
-    output_path = f'data/metadata/ufrn/{folder_name}_metadados.json' 
+    input_path = f'data/source/ufrpe/{folder_name}/{folder_name}.csv'
+    output_path = f'data/metadata/ufrpe/{folder_name}_metadados.json' 
     table_name = folder_name
 
     gerar_metadados_task = PythonOperator(
@@ -135,7 +134,7 @@ for folder_name in folders_names:
         dag=dag,
     )
 
-parent_dir_metadata = 'data/metadata/ufrn/'
+parent_dir_metadata = 'data/metadata/ufrpe/'
 
 metadados_files_path = [os.path.join(parent_dir_metadata, file) for file in os.listdir(parent_dir_metadata) if os.path.isfile(os.path.join(parent_dir_metadata, file))]
 
