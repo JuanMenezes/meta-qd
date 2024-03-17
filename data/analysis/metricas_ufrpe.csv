@@ -1,7 +1,7 @@
-nome_da_tabela,confiabilidade,completude,consistencia,precisao
-ufrpe_componentes_por_curriculo_metadados,0.5454545454545454,0.0,0.4545454545454546,0.5454545454545454
-ufrpe_qtd_alunos_graduacao_metadados,0.75,0.0,0.25,0.75
-ufrpe_ensino_de_graduacao_metadados,0.14285714285714285,0.0,0.7142857142857143,0.2857142857142857
-ufrpe_liquidacoes_metadados,0.25,0.04166666666666663,0.45833333333333337,0.5416666666666666
-ufrpe_matriculados_turma_graduacao_metadados,0.8,0.0,0.4,0.6
-ufrpe_censo_cursos_metadados,0.95,0.0,0.595,0.405
+nome_da_tabela,id_tabela,credibilidade,completude,consistencia,precisao
+ufrpe_componentes_por_curriculo_metadados,1,0.5454545454545454,0.0,0.4545454545454546,0.5454545454545454
+ufrpe_qtd_alunos_graduacao_metadados,2,0.75,0.0,0.25,0.75
+ufrpe_ensino_de_graduacao_metadados,3,0.14285714285714285,0.0,0.7142857142857143,0.2857142857142857
+ufrpe_liquidacoes_metadados,4,0.25,0.04166666666666663,0.45833333333333337,0.5416666666666666
+ufrpe_matriculados_turma_graduacao_metadados,5,0.8,0.0,0.4,0.6
+ufrpe_censo_cursos_metadados,6,0.95,0.0,0.595,0.405
