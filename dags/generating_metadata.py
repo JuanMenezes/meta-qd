@@ -48,14 +48,16 @@ def avaliacoes_criterios(**op_kwargs):
         with open(file_path, 'r') as arquivo:
             json_metadado = json.load(arquivo)
         
-        # Cálculo da confiabilidade, precisao, completude, acessibilidade, consistencia
+        # Cálculo da credibilidade, precisao, completude, acessibilidade, consistencia
         n_colunas = json_metadado['n_colunas']
         quantidade_object = json_metadado['contador_tipagem'].get("object",0)
-        confiabilidade = (n_colunas - quantidade_object) / n_colunas
+        credibilidade = (n_colunas - quantidade_object) / n_colunas
         
         # Cálculo da completude
         n_colunas = len(json_metadado["valores_nulos_por_coluna"])
-        n_valores_nulos_coluna = sum(value == 0 for value in json_metadado["valores_nulos_por_coluna"].values())
+        n_valores_nulos_coluna = sum(value != 0 for value in json_metadado["valores_nulos_por_coluna"].values())
+        print(n_valores_nulos_coluna)
+        print(n_colunas)
         completude = (1 - (n_valores_nulos_coluna / n_colunas))
 
         # Cálculo da consistência
@@ -81,7 +83,7 @@ def avaliacoes_criterios(**op_kwargs):
         except FileNotFoundError:
             pass
         
-        header = ['nome_da_tabela','confiabilidade', 'completude', 'consistencia', 'precisao']
+        header = ['nome_da_tabela','credibilidade', 'completude', 'consistencia', 'precisao']
         # Abrir o arquivo CSV no modo de adição ('a' para append) ou escrita ('w' para escrever) se o arquivo não existir
         modo_abertura = 'a' if arquivo_existente else 'w'
 
@@ -97,7 +99,7 @@ def avaliacoes_criterios(**op_kwargs):
             parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path)
             nome_da_tabela = str(nome_arquivo_sem_extensao.split(".")[0])
 
-            writer.writerow([f"ufrn_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
+            writer.writerow([f"ufrn_{nome_da_tabela}", credibilidade, completude, consistencia, precisao])
             print(f'Dados adicionados ao arquivo CSV "{nome_arquivo_csv}" com sucesso.')
 
             # lembrando que os dados gerados vou montar como json para plotar isso em outro código
