@@ -60,6 +60,9 @@ def verificar_tipos(metadados, dic_dados):
             inconsistencias += 1
     return inconsistencias
 
+def verificaca_precisao():
+    # aqui vou trabalhar a questão dos N checks que cada tabela vai ter principalmente trabalhando os campos obrigatorios
+    return 2
 
 # TODO existe uma questão de obrigatoriedade dos campos, alguns viram nulos e a base permite
 
@@ -90,15 +93,20 @@ def avaliacoes_criterios(**op_kwargs):
         n_valores_nulos_coluna = sum(value == 0 for value in json_metadado["valores_nulos_por_coluna"].values())
         completude = (1 - (n_valores_nulos_coluna / n_colunas))
 
-        # !________________Cálculo da consistência _______________
-        valores_distintos_por_coluna = json_metadado["valores_distintos_por_coluna"]
-        # inconsistencias = sum(value > 10 for value in valores_distintos_por_coluna.values())
-        # Aqui, o 1 é subtraído para enfatizar a consistência. Se não houver inconsistências (inconsistencias=0inconsistencias=0), a fórmula retornará 100100, indicando consistência completa. Se todas as colunas forem inconsistentes, a fórmula retornará 00.
+        # ________________Cálculo da consistência _______________ OK
         consistencia = (1 - (inconsistencias_retornadas / n_colunas))
+        '''
+            TODO Considerações para Refinamento
+                Granularidade: Como a função atual não considera quantas linhas em cada coluna têm tipos inconsistentes, essa métrica pode subestimar o impacto real das inconsistências isso poderia ser um ponto interessante de evolução
+                Ponderação por Importância da Coluna: Se algumas colunas são mais críticas para a integridade dos  dados do que outras, isso pode ser feito dando mais peso para as colunas obrigatorias
+                Extensão para Outras Inconsistências: Trabalhos futuros expandir a definição de consistência para incluir outros tipos de inconsistências (como inconsistências lógicas entre colunas, por exemplo), a fórmula pode ser adaptada para incorporar esses diferentes tipos com seus respectivos pesos.
+        '''
 
         # !________________Cálculo da precisão________________
-        precisao = (1 - (inconsistencias_retornadas / n_colunas))
-        # Aqui, não há subtração de 11, pois a precisão é medida diretamente pela proporção de valores distintos em relação ao total de colunas. Essa métrica indica a "precisão" dos dados em termos de diferentes valores presentes.
+        # TODO aqui preciso elaborar melhor a precisão, porque eu preciso considerar cada tabela, 
+        # por exemplo, id_curso é unico? se sim então soma 0, ao final teremos algo como precisao = 1 - 0+0+0 * 100
+        checks_precisao = 
+        precisao = 1 - (checks_precisao)
 
         # Criando o processo de salvar essas métricas em um CSV para plot posterior
         # Definir o nome do arquivo CSV
