@@ -1,0 +1,26 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "cod_empenho": "int64",
+        "ano": "int64",
+        "modalidade": "string",
+        "id_unidade_gestora": "int64",
+        "nome_unidade_gestora": "string",
+        "data": "datetime64",
+        "programa_trabalho_resumido": "string",
+        "fonte_recurso": "string",
+        "plano_interno": "string",
+        "esfera": "string",
+        "natureza_despesa": "string",
+        "credor": "string",
+        "valor_empenho": "float64",
+        "valor_reforcado": "float64",
+        "valor_anulado": "float64",
+        "valor_cancelado": "float64",
+        "saldo_empenho": "float64",
+        "processo": "string",
+        "documento_associado": "string",
+        "licitacao": "string",
+        "convenio": "string",
+        "observacoes": "string"
+    }
+}

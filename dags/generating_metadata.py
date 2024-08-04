@@ -8,6 +8,10 @@ import pandas as pd
 from collections import Counter
 
 
+# TODO aqui nessa hora de gerar os metadados existe um campo que precisará ser modificado para tipagem_das_colunas_disponibilizadas
+# antes eu usava a tipagem dos dados que já vinham, agora vou pegar o que é disponibilizado de tipagem para bater
+# TODO criei uma nova pasta chamada de dicionario de dados, onde eu vou ter a transformação do dicionario de dados em json
+# esse dicionario eu criei pra fazer o match do que eu encontrei com o que me foi passado
 def gerar_metadados(**op_kwargs):
     df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
     # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrn para ,

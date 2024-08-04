@@ -1,0 +1,32 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "id_curriculo": "int64",
+        "codigo": "string",
+        "nome_matriz": "string",
+        "id_curso": "int64",
+        "nome_curso": "string",
+        "semestre_conclusao_minimo": "int64",
+        "semestre_conclusao_ideal": "int64",
+        "semestre_conclusao_maximo": "int64",
+        "meses_conclusao_minimo": "int64",
+        "meses_conclusao_ideal": "int64",
+        "meses_conclusao_maximo": "int64",
+        "cr_total_minimo": "int64",
+        "ch_total_minima": "int64",
+        "ch_optativas_minima": "int64",
+        "ch_complementar_minima": "int64",
+        "max_eletivos": "int64",
+        "ch_nao_atividade_obrigatoria": "int64",
+        "cr_nao_atividade_obrigatorio": "int64",
+        "ch_atividade_obrigatoria": "int64",
+        "cr_minimo_semestre": "int64",
+        "cr_ideal_semestre": "int64",
+        "cr_maximo_semestre": "int64",
+        "ch_minima_semestre": "int64",
+        "ch_ideal_semestre": "int64",
+        "ch_maxima_semestre": "int64",
+        "periodo_entrada_vigor": "int64",
+        "ano_entrada_vigor": "int64",
+        "observacao": "string"
+    }
+}

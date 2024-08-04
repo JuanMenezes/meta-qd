@@ -1,0 +1,21 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "matricula": "int64",
+        "ano_ingresso": "int64",
+        "periodo_ingresso": "int64",
+        "id_curso": "float64",
+        "id_unidade": "float64",
+        "id_unidade_gestora": "float64",
+        "nome_discente": "object",
+        "sexo": "object",
+        "forma_ingresso": "object",
+        "tipo_discente": "object",
+        "status": "object",
+        "sigla_nivel_ensino": "object",
+        "nivel_ensino": "object",
+        "nome_curso": "object",
+        "modalidade_educacao": "object",
+        "nome_unidade": "object",
+        "nome_unidade_gestora": "object"
+    }
+}
