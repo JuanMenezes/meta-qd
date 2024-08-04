@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 from collections import Counter
 
+
 def gerar_metadados(**op_kwargs):
     df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
     # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrn para ,
@@ -42,6 +43,7 @@ def gerar_metadados(**op_kwargs):
     # Salvar as informações em um arquivo JSON
     with open(op_kwargs['output_path'], 'w') as json_file:
         json.dump(metadados, json_file, indent=4)
+
 
 def avaliacoes_criterios(**op_kwargs):
     print(f'Arquivos de metadados atuais:{op_kwargs["metadados_files_path_list"]}')
@@ -103,6 +105,7 @@ def avaliacoes_criterios(**op_kwargs):
 
             # lembrando que os dados gerados vou montar como json para plotar isso em outro código
             # Salvar as informações em um arquivo JSON
+
 
 default_args = {
     'owner': 'airflow',
