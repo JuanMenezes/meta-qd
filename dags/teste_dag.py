@@ -6,16 +6,16 @@ import pandas as pd
 # Metainformações dos arquivos
 file_checks = {
     'ensino_de_graduacao.csv': {
-        'path': '/path/to/ensino_de_graduacao.csv',
+        'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
         'checks': {
             'id_curso': {'unique': True, 'nulls': False},
             'nome': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
     'componentes_por_curriculo.csv': {
-        'path': '/path/to/componentes_por_curriculo.csv',
+        'path': 'data/source/ufrn/componentes_por_curriculo/componentes_por_curriculo.csv',
         'checks': {
-            'id_componente': {'unique': True, 'nulls': False}
+            'id_curriculo': {'unique': True, 'nulls': False}
         }
     },
     # Adicione entradas semelhantes para outros arquivos conforme necessário
