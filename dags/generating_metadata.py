@@ -7,76 +7,100 @@ from datetime import datetime
 import pandas as pd
 from collections import Counter
 
+# ? ____________________ INICIO CRIAÇÃO DOS METADADOS ___________________
+def verificar_e_consertar_tipos(df):
+    for coluna in df.columns:
+        if df[coluna].dtype == 'object':  # Verifica se o tipo da coluna é 'object'
+            # Checa se todos os itens na coluna são do tipo string (str)
+            if all(isinstance(x, str) or pd.isna(x) for x in df[coluna]):
+                df[coluna] = df[coluna].astype('string')  # Converte para 'string' se todos forem strings
+            else:
+                # Tenta converter para numérico ou data, adiciona mais regras conforme necessário
+                df[coluna] = pd.to_numeric(df[coluna], errors='coerce')
+                if df[coluna].isnull().any():  # Checa se a conversão para numérico falhou (produziu NaNs)
+                    df[coluna] = pd.to_datetime(df[coluna], errors='coerce')
+    return df
 
-# TODO aqui nessa hora de gerar os metadados existe um campo que precisará ser modificado para tipagem_das_colunas_disponibilizadas
-# antes eu usava a tipagem dos dados que já vinham, agora vou pegar o que é disponibilizado de tipagem para bater
-# TODO criei uma nova pasta chamada de dicionario de dados, onde eu vou ter a transformação do dicionario de dados em json
-# esse dicionario eu criei pra fazer o match do que eu encontrei com o que me foi passado
+
 def gerar_metadados(**op_kwargs):
     df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
     # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrn para ,
-    
-    # Coletar metadados
-    tipagem_das_colunas = df.dtypes
-    # Converter a série de tipos de dados para um dicionário
-    tipos_de_dados_dict = tipagem_das_colunas.astype(str).to_dict()
-    # Extrair os tipos de dados
-    print(list(tipos_de_dados_dict.values()))
-    # Contar a quantidade de tipos de dados
-    tipos_de_dados = list(tipos_de_dados_dict.values())
-    contagem_tipos = Counter(tipos_de_dados)
 
-    descricao = df.describe()
-    colunas = df.columns.tolist()
-    nulos = df.isnull().sum()
-    contagem_valores_distintos = df.nunique()
-    num_linhas, num_colunas = df.shape
-    # Criar um dicionário para armazenar os metadados
+    df = verificar_e_consertar_tipos(df)  # Verifica e ajusta os tipos de dados
+    # Coletar metadados após a verificação de tipo
     metadados = {
-        "nome_da_tabela": op_kwargs['table_name'],
-        "n_linhas": num_linhas,
-        "n_colunas": num_colunas,
-        "tipagem_das_colunas": tipos_de_dados_dict,
-        "contador_tipagem": contagem_tipos,
-        "estats_descritivas": descricao.to_dict(),  # Convertendo DataFrame para dicionário
-        "nome_das_colunas": colunas,
-        "valores_nulos_por_coluna": nulos.to_dict(),  # Convertendo Series para dicionário
-        "valores_distintos_por_coluna": contagem_valores_distintos.to_dict()
+        "nome_da_tabela": table_name,
+        "n_linhas": df.shape[0],
+        "n_colunas": df.shape[1],
+        "tipagem_das_colunas": df.dtypes.astype(str).to_dict(),
+        "contador_tipagem": Counter(df.dtypes.astype(str).values),
+        "estats_descritivas": df.describe(include='all').to_dict(),
+        "nome_das_colunas": df.columns.tolist(),
+        "valores_nulos_por_coluna": df.isnull().sum().to_dict(),
+        "valores_distintos_por_coluna": df.nunique().to_dict()
     }
-
     # Salvar as informações em um arquivo JSON
     with open(op_kwargs['output_path'], 'w') as json_file:
         json.dump(metadados, json_file, indent=4)
 
+# ? ____________________ FIM DE CRIAÇÃO DOS METADADOS _________________________
+# !
+# !
+# ? ____________________ INICIO CRIAÇÃO DOS CRITERIOS _________________________
+# TODO certo, agora que já corrigi minha geração de metadados, 
+# preciso bater se o que ele me gerou bate com o que ele me disse
+
+
+def verificar_tipos(metadados, dic_dados):
+    print(dic_dados)
+    inconsistencias = 0
+    for coluna, tipo in dic_dados['tipagem_das_colunas_disponibilizadas'].items():
+        tipo_real = metadados['tipagem_das_colunas'].get(coluna)
+        if tipo_real and tipo_real != tipo:
+            inconsistencias += 1
+    return inconsistencias
+
+
+# TODO existe uma questão de obrigatoriedade dos campos, alguns viram nulos e a base permite
+
 
 def avaliacoes_criterios(**op_kwargs):
     print(f'Arquivos de metadados atuais:{op_kwargs["metadados_files_path_list"]}')
-    for file_path in op_kwargs["metadados_files_path_list"]:
-        with open(file_path, 'r') as arquivo:
+    print(f'Arquivos de dicionarios atuais:{op_kwargs["dicionario_dados_path_list"]}')
+    for file_path_metadados, file_path_dicionario in zip(op_kwargs["metadados_files_path_list"], op_kwargs["dicionario_dados_path_list"]):
+        
+        # ? _________ Carga dos arquivos em json _________
+        with open(file_path_metadados, 'r') as arquivo:
             json_metadado = json.load(arquivo)
         
-        # Cálculo da confiabilidade, precisao, completude, acessibilidade, consistencia
+        with open(file_path_dicionario, 'r') as arquivo_dic:
+            json_dic = json.load(arquivo_dic)
+
+        inconsistencias_retornadas = verificar_tipos(json_metadado, json_dic)
+        
+        print(f"Aqui está a quantidade inconsistencias retornadas {inconsistencias_retornadas}")
+        # ?_____________Cálculo da confiabilidade ________________
         n_colunas = json_metadado['n_colunas']
+        n_linhas = json_metadado['n_linhas']
         quantidade_object = json_metadado['contador_tipagem'].get("object",0)
         confiabilidade = (n_colunas - quantidade_object) / n_colunas
-        
-        # Cálculo da completude
+
+        # _____________ Cálculo da completude ________________ OK
         n_colunas = len(json_metadado["valores_nulos_por_coluna"])
         n_valores_nulos_coluna = sum(value == 0 for value in json_metadado["valores_nulos_por_coluna"].values())
         completude = (1 - (n_valores_nulos_coluna / n_colunas))
 
-        # Cálculo da consistência
+        # !________________Cálculo da consistência _______________
         valores_distintos_por_coluna = json_metadado["valores_distintos_por_coluna"]
-        inconsistencias = sum(value > 10 for value in valores_distintos_por_coluna.values())
+        # inconsistencias = sum(value > 10 for value in valores_distintos_por_coluna.values())
         # Aqui, o 1 é subtraído para enfatizar a consistência. Se não houver inconsistências (inconsistencias=0inconsistencias=0), a fórmula retornará 100100, indicando consistência completa. Se todas as colunas forem inconsistentes, a fórmula retornará 00.
-        consistencia = (1 - (inconsistencias / n_colunas))
+        consistencia = (1 - (inconsistencias_retornadas / n_colunas))
 
-        # Cálculo da precisão
-        precisao = (inconsistencias / n_colunas)
+        # !________________Cálculo da precisão________________
+        precisao = (1 - (inconsistencias_retornadas / n_colunas))
         # Aqui, não há subtração de 11, pois a precisão é medida diretamente pela proporção de valores distintos em relação ao total de colunas. Essa métrica indica a "precisão" dos dados em termos de diferentes valores presentes.
 
-
-        # ! Criando o processo de salvar essas métricas em um CSV para plot posterior
+        # Criando o processo de salvar essas métricas em um CSV para plot posterior
         # Definir o nome do arquivo CSV
         nome_arquivo_csv = 'data/analysis/metricas_ufrn.csv'
 
@@ -101,7 +125,7 @@ def avaliacoes_criterios(**op_kwargs):
                 writer.writerow(header)
             
             # Adicionar a linha ao arquivo CSV
-            parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path)
+            parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path_metadados)
             nome_da_tabela = str(nome_arquivo_sem_extensao.split(".")[0])
 
             writer.writerow([f"ufrn_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
@@ -109,6 +133,10 @@ def avaliacoes_criterios(**op_kwargs):
 
             # lembrando que os dados gerados vou montar como json para plotar isso em outro código
             # Salvar as informações em um arquivo JSON
+# ? ____________________ FIM DE CRIAÇÃO DOS CRITERIOS _________________________
+# !
+# !
+# ? ____________________ INICIO DEFINICOES AIRFLOW ____________________________
 
 
 default_args = {
@@ -146,14 +174,26 @@ parent_dir_metadata = 'data/metadata/ufrn/'
 
 metadados_files_path = [os.path.join(parent_dir_metadata, file) for file in os.listdir(parent_dir_metadata) if os.path.isfile(os.path.join(parent_dir_metadata, file))]
 
+metadados_files_path = sorted(metadados_files_path)
+
+
+parent_dir_dicionario = 'data/dicionario_dados/ufrn/'
+
+dicionario_dados_files_path = [os.path.join(parent_dir_dicionario, file) for file in os.listdir(parent_dir_dicionario) if os.path.isfile(os.path.join(parent_dir_dicionario, file))]
+
+dicionario_dados_files_path = sorted(dicionario_dados_files_path)
+
 avaliacoes_criterios_task = PythonOperator(
     task_id=f'avaliacoes_criterios',
     python_callable=avaliacoes_criterios,
-    op_kwargs={'metadados_files_path_list': metadados_files_path},
+    op_kwargs={'metadados_files_path_list': metadados_files_path, 'dicionario_dados_path_list': dicionario_dados_files_path},
     dag=dag,
 )
-# Define a ordem de execução das tarefas
+# ? ____________________ FIM DEFINICOES AIRFLOW ____________________________
+
+
 gerar_metadados_task >> avaliacoes_criterios_task
+
 
 if __name__ == "__main__":
     dag.cli()

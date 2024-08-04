@@ -1,13 +1,13 @@
 {
-    "nome_da_tabela": "componentes_por_curriculo",
+    "nome_da_tabela": "ensino_de_graduacao",
     "n_linhas": 417,
     "n_colunas": 28,
     "tipagem_das_colunas": {
         "id_curriculo": "int64",
-        "codigo": "object",
-        "nome_matriz": "object",
+        "codigo": "string",
+        "nome_matriz": "string",
         "id_curso": "int64",
-        "nome_curso": "object",
+        "nome_curso": "string",
         "semestre_conclusao_minimo": "float64",
         "semestre_conclusao_ideal": "float64",
         "semestre_conclusao_maximo": "float64",
@@ -30,16 +30,19 @@
         "ch_maxima_semestre": "float64",
         "periodo_entrada_vigor": "int64",
         "ano_entrada_vigor": "int64",
-        "observacao": "object"
+        "observacao": "string"
     },
     "contador_tipagem": {
         "int64": 10,
-        "object": 4,
+        "string": 4,
         "float64": 14
     },
     "estats_descritivas": {
         "id_curriculo": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 118085252.03117506,
             "std": 77413338.85392337,
             "min": 100399.0,
@@ -48,8 +51,37 @@
             "75%": 137734884.0,
             "max": 510278490.0
         },
+        "codigo": {
+            "count": 417,
+            "unique": 204,
+            "top": "02",
+            "freq": 83,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "nome_matriz": {
+            "count": 180,
+            "unique": 156,
+            "top": "CI\u00caNCIAS E TECNOLOGIA - NATAL - N - BACHARELADO",
+            "freq": 5,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "id_curso": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 46210886.53717026,
             "std": 54477544.49553807,
             "min": 315727.0,
@@ -58,8 +90,24 @@
             "75%": 102923840.0,
             "max": 168173013.0
         },
+        "nome_curso": {
+            "count": 417,
+            "unique": 282,
+            "top": "CI\u00caNCIAS E TECNOLOGIA",
+            "freq": 15,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "semestre_conclusao_minimo": {
             "count": 375.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 12.434666666666667,
             "std": 6.838892656192474,
             "min": 1.0,
@@ -70,6 +118,9 @@
         },
         "semestre_conclusao_ideal": {
             "count": 316.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 17.354430379746834,
             "std": 13.101836027578361,
             "min": 1.0,
@@ -80,6 +131,9 @@
         },
         "semestre_conclusao_maximo": {
             "count": 375.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 22.226666666666667,
             "std": 13.135018033951388,
             "min": 1.0,
@@ -90,6 +144,9 @@
         },
         "meses_conclusao_minimo": {
             "count": 174.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 16.21264367816092,
             "std": 6.113158452499365,
             "min": 1.0,
@@ -100,6 +157,9 @@
         },
         "meses_conclusao_ideal": {
             "count": 115.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 30.73913043478261,
             "std": 11.020783361625895,
             "min": 1.0,
@@ -110,6 +170,9 @@
         },
         "meses_conclusao_maximo": {
             "count": 174.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 31.591954022988507,
             "std": 11.396183504659021,
             "min": 1.0,
@@ -120,6 +183,9 @@
         },
         "cr_total_minimo": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 73.88489208633094,
             "std": 166.37852518096972,
             "min": 0.0,
@@ -130,6 +196,9 @@
         },
         "ch_total_minima": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 2320.5035971223024,
             "std": 2228.2096276649468,
             "min": 0.0,
@@ -140,6 +209,9 @@
         },
         "ch_optativas_minima": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 265.48920863309354,
             "std": 285.4628251150919,
             "min": 0.0,
@@ -150,6 +222,9 @@
         },
         "ch_complementar_minima": {
             "count": 170.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 153.0,
             "std": 83.49942422648103,
             "min": 0.0,
@@ -160,6 +235,9 @@
         },
         "max_eletivos": {
             "count": 396.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 199.67171717171718,
             "std": 222.5175704809399,
             "min": 0.0,
@@ -170,6 +248,9 @@
         },
         "ch_nao_atividade_obrigatoria": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 1058.1151079136691,
             "std": 1042.8117322094638,
             "min": 0.0,
@@ -180,6 +261,9 @@
         },
         "cr_nao_atividade_obrigatorio": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 69.19184652278177,
             "std": 167.89424507562745,
             "min": 0.0,
@@ -190,6 +274,9 @@
         },
         "ch_atividade_obrigatoria": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 720.5875299760191,
             "std": 1805.4743004683885,
             "min": 0.0,
@@ -200,6 +287,9 @@
         },
         "cr_minimo_semestre": {
             "count": 176.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 5.954545454545454,
             "std": 20.34918550334019,
             "min": 0.0,
@@ -210,6 +300,9 @@
         },
         "cr_ideal_semestre": {
             "count": 176.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 29.568181818181817,
             "std": 48.88781220118345,
             "min": 0.0,
@@ -220,6 +313,9 @@
         },
         "cr_maximo_semestre": {
             "count": 176.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 42.03977272727273,
             "std": 53.951550836489744,
             "min": 0.0,
@@ -230,6 +326,9 @@
         },
         "ch_minima_semestre": {
             "count": 362.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 47.30386740331492,
             "std": 204.04851532295052,
             "min": 0.0,
@@ -240,6 +339,9 @@
         },
         "ch_ideal_semestre": {
             "count": 34.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 0.0,
             "std": 0.0,
             "min": 0.0,
@@ -250,6 +352,9 @@
         },
         "ch_maxima_semestre": {
             "count": 160.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 174.09375,
             "std": 228.92960651817413,
             "min": 0.0,
@@ -260,6 +365,9 @@
         },
         "periodo_entrada_vigor": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 1.2182254196642686,
             "std": 0.42500420476017153,
             "min": 0.0,
@@ -270,6 +378,9 @@
         },
         "ano_entrada_vigor": {
             "count": 417.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 2006.0239808153476,
             "std": 139.51902062387688,
             "min": 0.0,
@@ -277,6 +388,19 @@
             "50%": 2017.0,
             "75%": 2019.0,
             "max": 2023.0
+        },
+        "observacao": {
+            "count": 1,
+            "unique": 1,
+            "top": "Migrados do Ponto@. Pelo fato de aparecer como curr\u00edculo duplicado, no sigaa, ele foi desativado",
+            "freq": 1,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
         }
     },
     "nome_das_colunas": [
