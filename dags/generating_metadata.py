@@ -105,7 +105,7 @@ def avaliacoes_criterios(**op_kwargs):
         # !________________Cálculo da precisão________________
         # TODO aqui preciso elaborar melhor a precisão, porque eu preciso considerar cada tabela, 
         # por exemplo, id_curso é unico? se sim então soma 0, ao final teremos algo como precisao = 1 - 0+0+0 * 100
-        checks_precisao = 
+        checks_precisao = verificaca_precisao()
         precisao = 1 - (checks_precisao)
 
         # Criando o processo de salvar essas métricas em um CSV para plot posterior
