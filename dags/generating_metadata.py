@@ -7,7 +7,12 @@ from datetime import datetime
 import pandas as pd
 from collections import Counter
 
-# ? ____________________ INICIO CRIAÇÃO DOS METADADOS ___________________
+# ? ____________ VARIAVEIS GLOBAIS ___________________
+
+ies = 'ufrn'
+
+
+# ? ____________________ INICIO CRIAÇÃO DOS METADADOS ___________________ OK
 def verificar_e_consertar_tipos(df):
     for coluna in df.columns:
         if df[coluna].dtype == 'object':  # Verifica se o tipo da coluna é 'object'
@@ -46,9 +51,66 @@ def gerar_metadados(**op_kwargs):
 # ? ____________________ FIM DE CRIAÇÃO DOS METADADOS _________________________
 # !
 # !
-# ? ____________________ INICIO CRIAÇÃO DOS CRITERIOS _________________________
-# TODO certo, agora que já corrigi minha geração de metadados, 
-# preciso bater se o que ele me gerou bate com o que ele me disse
+# ? ____________________ INICIO CRIAÇÃO DOS CRITERIOS ________________ ON GOING
+
+file_checks = {
+    'ensino_de_graduacao_ufrn': {
+        'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
+        'checks': {
+            'id_curso': {'unique': True, 'nulls': False},
+            'nome': {'regex': r'^[a-zA-Z ]+$'}
+        }
+    },
+    'componentes_por_curriculo_ufrn': {
+        'path': 'data/source/ufrn/componentes_por_curriculo/componentes_por_curriculo.csv',
+        'checks': {
+            'id_curriculo': {'unique': True, 'nulls': False}
+        }
+    },
+    'liquidacoes_ufrn': {
+        'path': 'data/source/ufrn/liquidacoes/liquidacoes.csv',
+        'checks': {
+            'cod_empenho': {'unique': True, 'nulls': False}
+        }
+    },
+    'matriculados_turma_graduacao_ufrn': {
+        'path': 'data/source/ufrn/matriculados_turma_graduacao/matriculados_turma_graduacao.csv',
+        'checks': {
+            'matricula': {'unique': True, 'nulls': False}
+        }
+    },
+}
+
+
+def calcular_precisao(file_checks):
+    path = file_checks
+    print(f'Aqui o path foi {path}')
+    checks = file_config['checks']
+    df = pd.read_csv(path, delimiter=';')
+    print(f'o dataframe foi {df}')
+    print(f'aqui o checks foi {checks}')
+    # TODO aqui mudar para quando for ufrn
+
+    resultados = {}
+    total_records = len(df)
+
+    for coluna, crits in checks.items():
+        if 'unique' in crits:
+            unique_pass_rate = (total_records - df[coluna].duplicated().sum()) / total_records
+            print(f'unique_pass_rate {unique_pass_rate}')
+            resultados[f'{coluna}_unique'] = unique_pass_rate
+
+        if 'nulls' in crits:
+            non_nulls_rate = df[coluna].notnull().mean()
+            resultados[f'{coluna}_nulls'] = non_nulls_rate
+
+        if 'regex' in crits:
+            regex_pass_rate = df[coluna].str.match(crits['regex']).mean()
+            resultados[f'{coluna}_regex'] = regex_pass_rate
+
+    # Calcula a média de precisão para o arquivo
+    average_precision = sum(resultados.values()) / len(resultados)
+    return average_precision
 
 
 def verificar_tipos(metadados, dic_dados):
@@ -60,29 +122,22 @@ def verificar_tipos(metadados, dic_dados):
             inconsistencias += 1
     return inconsistencias
 
-def verificaca_precisao():
-    # aqui vou trabalhar a questão dos N checks que cada tabela vai ter principalmente trabalhando os campos obrigatorios
-    return 2
-
-# TODO existe uma questão de obrigatoriedade dos campos, alguns viram nulos e a base permite
-
 
 def avaliacoes_criterios(**op_kwargs):
     print(f'Arquivos de metadados atuais:{op_kwargs["metadados_files_path_list"]}')
     print(f'Arquivos de dicionarios atuais:{op_kwargs["dicionario_dados_path_list"]}')
     for file_path_metadados, file_path_dicionario in zip(op_kwargs["metadados_files_path_list"], op_kwargs["dicionario_dados_path_list"]):
-        
+
         # ? _________ Carga dos arquivos em json _________
         with open(file_path_metadados, 'r') as arquivo:
             json_metadado = json.load(arquivo)
-        
+
         with open(file_path_dicionario, 'r') as arquivo_dic:
             json_dic = json.load(arquivo_dic)
 
         inconsistencias_retornadas = verificar_tipos(json_metadado, json_dic)
-        
-        print(f"Aqui está a quantidade inconsistencias retornadas {inconsistencias_retornadas}")
-        # ?_____________Cálculo da confiabilidade ________________
+
+        # !_____________Cálculo da confiabilidade ________________
         n_colunas = json_metadado['n_colunas']
         n_linhas = json_metadado['n_linhas']
         quantidade_object = json_metadado['contador_tipagem'].get("object",0)
@@ -96,21 +151,19 @@ def avaliacoes_criterios(**op_kwargs):
         # ________________Cálculo da consistência _______________ OK
         consistencia = (1 - (inconsistencias_retornadas / n_colunas))
         '''
-            TODO Considerações para Refinamento
+            Considerações para Refinamento
                 Granularidade: Como a função atual não considera quantas linhas em cada coluna têm tipos inconsistentes, essa métrica pode subestimar o impacto real das inconsistências isso poderia ser um ponto interessante de evolução
                 Ponderação por Importância da Coluna: Se algumas colunas são mais críticas para a integridade dos  dados do que outras, isso pode ser feito dando mais peso para as colunas obrigatorias
                 Extensão para Outras Inconsistências: Trabalhos futuros expandir a definição de consistência para incluir outros tipos de inconsistências (como inconsistências lógicas entre colunas, por exemplo), a fórmula pode ser adaptada para incorporar esses diferentes tipos com seus respectivos pesos.
         '''
 
         # !________________Cálculo da precisão________________
-        # TODO aqui preciso elaborar melhor a precisão, porque eu preciso considerar cada tabela, 
-        # por exemplo, id_curso é unico? se sim então soma 0, ao final teremos algo como precisao = 1 - 0+0+0 * 100
-        checks_precisao = verificaca_precisao()
-        precisao = 1 - (checks_precisao)
+        # TODO unico tratamento é saber qual é a coluna do file checks
+        # TODO preciso corrigir o nome da tabela, na hora de gerar o metadado está errado
+        precisao = calcular_precisao(file_checks[f'{json_metadado['nome_tabela']}_{ies}'])
 
-        # Criando o processo de salvar essas métricas em um CSV para plot posterior
-        # Definir o nome do arquivo CSV
-        nome_arquivo_csv = 'data/analysis/metricas_ufrn.csv'
+        # _________INICIO_____ SAVING ON CSV ______________
+        nome_arquivo_csv = f'data/analysis/metricas_{ies}.csv'
 
         # Verificar se o arquivo CSV já existe
         arquivo_existente = False
@@ -119,7 +172,7 @@ def avaliacoes_criterios(**op_kwargs):
                 arquivo_existente = True
         except FileNotFoundError:
             pass
-        
+
         header = ['nome_da_tabela','confiabilidade', 'completude', 'consistencia', 'precisao']
         # Abrir o arquivo CSV no modo de adição ('a' para append) ou escrita ('w' para escrever) se o arquivo não existir
         modo_abertura = 'a' if arquivo_existente else 'w'
@@ -131,16 +184,16 @@ def avaliacoes_criterios(**op_kwargs):
             # Se o arquivo não existir, escrever o cabeçalho
             if not arquivo_existente:
                 writer.writerow(header)
-            
+
             # Adicionar a linha ao arquivo CSV
             parte_especifica, nome_arquivo_sem_extensao = os.path.split(file_path_metadados)
             nome_da_tabela = str(nome_arquivo_sem_extensao.split(".")[0])
 
-            writer.writerow([f"ufrn_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
+            writer.writerow([f"{ies}_{nome_da_tabela}", confiabilidade, completude, consistencia, precisao])
             print(f'Dados adicionados ao arquivo CSV "{nome_arquivo_csv}" com sucesso.')
 
             # lembrando que os dados gerados vou montar como json para plotar isso em outro código
-            # Salvar as informações em um arquivo JSON
+            # _________FIM_____ SAVING ON CSV ______________
 # ? ____________________ FIM DE CRIAÇÃO DOS CRITERIOS _________________________
 # !
 # !
@@ -161,14 +214,14 @@ dag = DAG(
     tags=["metaqd", "tcc"]
 )
 
-parent_dir_source = 'data/source/ufrn/'
+parent_dir_source = f'data/source/{ies}/'
 
 # Para cada diretorio com dados eu gero os seus respectivos metadados
 folders_names = [folder for folder in os.listdir(parent_dir_source) if os.path.isdir(os.path.join(parent_dir_source, folder))]
 
 for folder_name in folders_names:
-    input_path = f'data/source/ufrn/{folder_name}/{folder_name}.csv'
-    output_path = f'data/metadata/ufrn/{folder_name}_metadados.json' 
+    input_path = f'data/source/{ies}/{folder_name}/{folder_name}.csv'
+    output_path = f'data/metadata/{ies}/{folder_name}_metadados.json' 
     table_name = folder_name
 
     gerar_metadados_task = PythonOperator(
@@ -178,23 +231,28 @@ for folder_name in folders_names:
         dag=dag,
     )
 
-parent_dir_metadata = 'data/metadata/ufrn/'
-
+parent_dir_metadata = f'data/metadata/{ies}/'
 metadados_files_path = [os.path.join(parent_dir_metadata, file) for file in os.listdir(parent_dir_metadata) if os.path.isfile(os.path.join(parent_dir_metadata, file))]
-
 metadados_files_path = sorted(metadados_files_path)
 
 
-parent_dir_dicionario = 'data/dicionario_dados/ufrn/'
-
+parent_dir_dicionario = f'data/dicionario_dados/{ies}/'
 dicionario_dados_files_path = [os.path.join(parent_dir_dicionario, file) for file in os.listdir(parent_dir_dicionario) if os.path.isfile(os.path.join(parent_dir_dicionario, file))]
-
 dicionario_dados_files_path = sorted(dicionario_dados_files_path)
 
+parent_dir_brutos = f'data/source/{ies}/'
+arquivos_origem_files_path = [os.path.join(parent_dir_brutos, file) for file in os.listdir(parent_dir_brutos) if os.path.isfile(os.path.join(parent_dir_brutos, file))]
+arquivos_origem_files_path = sorted(arquivos_origem_files_path)
+
+
 avaliacoes_criterios_task = PythonOperator(
-    task_id=f'avaliacoes_criterios',
+    task_id='avaliacoes_criterios',
     python_callable=avaliacoes_criterios,
-    op_kwargs={'metadados_files_path_list': metadados_files_path, 'dicionario_dados_path_list': dicionario_dados_files_path},
+    op_kwargs={
+        'metadados_files_path_list': metadados_files_path,
+        'dicionario_dados_path_list': dicionario_dados_files_path,
+        'arquivos_origem_path_list': arquivos_origem_files_path
+        },
     dag=dag,
 )
 # ? ____________________ FIM DEFINICOES AIRFLOW ____________________________
