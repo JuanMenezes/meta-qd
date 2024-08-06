@@ -34,7 +34,7 @@ def gerar_metadados(**op_kwargs):
     df = verificar_e_consertar_tipos(df)  # Verifica e ajusta os tipos de dados
     # Coletar metadados após a verificação de tipo
     metadados = {
-        "nome_da_tabela": table_name,
+        "nome_da_tabela": op_kwargs['table_name'],
         "n_linhas": df.shape[0],
         "n_colunas": df.shape[1],
         "tipagem_das_colunas": df.dtypes.astype(str).to_dict(),
@@ -54,26 +54,26 @@ def gerar_metadados(**op_kwargs):
 # ? ____________________ INICIO CRIAÇÃO DOS CRITERIOS ________________ ON GOING
 
 file_checks = {
-    'ensino_de_graduacao_ufrn': {
+    'ensino_de_graduacao_dic_ufrn': {
         'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
         'checks': {
             'id_curso': {'unique': True, 'nulls': False},
             'nome': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
-    'componentes_por_curriculo_ufrn': {
+    'componentes_por_curriculo_dic_ufrn': {
         'path': 'data/source/ufrn/componentes_por_curriculo/componentes_por_curriculo.csv',
         'checks': {
             'id_curriculo': {'unique': True, 'nulls': False}
         }
     },
-    'liquidacoes_ufrn': {
+    'liquidacoes_dic_ufrn': {
         'path': 'data/source/ufrn/liquidacoes/liquidacoes.csv',
         'checks': {
             'cod_empenho': {'unique': True, 'nulls': False}
         }
     },
-    'matriculados_turma_graduacao_ufrn': {
+    'matriculados_turma_graduacao_dic_ufrn': {
         'path': 'data/source/ufrn/matriculados_turma_graduacao/matriculados_turma_graduacao.csv',
         'checks': {
             'matricula': {'unique': True, 'nulls': False}
@@ -83,13 +83,9 @@ file_checks = {
 
 
 def calcular_precisao(file_checks):
-    path = file_checks
-    print(f'Aqui o path foi {path}')
-    checks = file_config['checks']
+    path = file_checks['path']
+    checks = file_checks['checks']
     df = pd.read_csv(path, delimiter=';')
-    print(f'o dataframe foi {df}')
-    print(f'aqui o checks foi {checks}')
-    # TODO aqui mudar para quando for ufrn
 
     resultados = {}
     total_records = len(df)
@@ -128,6 +124,9 @@ def avaliacoes_criterios(**op_kwargs):
     print(f'Arquivos de dicionarios atuais:{op_kwargs["dicionario_dados_path_list"]}')
     for file_path_metadados, file_path_dicionario in zip(op_kwargs["metadados_files_path_list"], op_kwargs["dicionario_dados_path_list"]):
 
+        parte_especificada, file_name_sem_extensao = os.path.split(file_path_dicionario)
+        table_name = str(file_name_sem_extensao.split(".")[0])
+        
         # ? _________ Carga dos arquivos em json _________
         with open(file_path_metadados, 'r') as arquivo:
             json_metadado = json.load(arquivo)
@@ -139,7 +138,6 @@ def avaliacoes_criterios(**op_kwargs):
 
         # !_____________Cálculo da confiabilidade ________________
         n_colunas = json_metadado['n_colunas']
-        n_linhas = json_metadado['n_linhas']
         quantidade_object = json_metadado['contador_tipagem'].get("object",0)
         confiabilidade = (n_colunas - quantidade_object) / n_colunas
 
@@ -157,10 +155,8 @@ def avaliacoes_criterios(**op_kwargs):
                 Extensão para Outras Inconsistências: Trabalhos futuros expandir a definição de consistência para incluir outros tipos de inconsistências (como inconsistências lógicas entre colunas, por exemplo), a fórmula pode ser adaptada para incorporar esses diferentes tipos com seus respectivos pesos.
         '''
 
-        # !________________Cálculo da precisão________________
-        # TODO unico tratamento é saber qual é a coluna do file checks
-        # TODO preciso corrigir o nome da tabela, na hora de gerar o metadado está errado
-        precisao = calcular_precisao(file_checks[f'{json_metadado['nome_tabela']}_{ies}'])
+        # ________________Cálculo da precisão________________ OK
+        precisao = calcular_precisao(file_checks[f'{table_name}_{ies}'])
 
         # _________INICIO_____ SAVING ON CSV ______________
         nome_arquivo_csv = f'data/analysis/metricas_{ies}.csv'
@@ -221,7 +217,8 @@ folders_names = [folder for folder in os.listdir(parent_dir_source) if os.path.i
 
 for folder_name in folders_names:
     input_path = f'data/source/{ies}/{folder_name}/{folder_name}.csv'
-    output_path = f'data/metadata/{ies}/{folder_name}_metadados.json' 
+    output_path = f'data/metadata/{ies}/{folder_name}_metadados.json'
+    print()
     table_name = folder_name
 
     gerar_metadados_task = PythonOperator(
@@ -240,18 +237,13 @@ parent_dir_dicionario = f'data/dicionario_dados/{ies}/'
 dicionario_dados_files_path = [os.path.join(parent_dir_dicionario, file) for file in os.listdir(parent_dir_dicionario) if os.path.isfile(os.path.join(parent_dir_dicionario, file))]
 dicionario_dados_files_path = sorted(dicionario_dados_files_path)
 
-parent_dir_brutos = f'data/source/{ies}/'
-arquivos_origem_files_path = [os.path.join(parent_dir_brutos, file) for file in os.listdir(parent_dir_brutos) if os.path.isfile(os.path.join(parent_dir_brutos, file))]
-arquivos_origem_files_path = sorted(arquivos_origem_files_path)
-
 
 avaliacoes_criterios_task = PythonOperator(
     task_id='avaliacoes_criterios',
     python_callable=avaliacoes_criterios,
     op_kwargs={
         'metadados_files_path_list': metadados_files_path,
-        'dicionario_dados_path_list': dicionario_dados_files_path,
-        'arquivos_origem_path_list': arquivos_origem_files_path
+        'dicionario_dados_path_list': dicionario_dados_files_path
         },
     dag=dag,
 )

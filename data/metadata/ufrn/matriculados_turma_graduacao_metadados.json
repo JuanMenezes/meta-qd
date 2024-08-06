@@ -1,5 +1,5 @@
 {
-    "nome_da_tabela": "ensino_de_graduacao",
+    "nome_da_tabela": "matriculados_turma_graduacao",
     "n_linhas": 17163,
     "n_colunas": 17,
     "tipagem_das_colunas": {

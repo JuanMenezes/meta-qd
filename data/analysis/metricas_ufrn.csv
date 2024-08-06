@@ -1,0 +1,5 @@
+nome_da_tabela,confiabilidade,completude,consistencia,precisao
+ufrn_componentes_por_curriculo_metadados,1.0,0.5714285714285714,0.5,1.0
+ufrn_ensino_de_graduacao_metadados,1.0,0.4545454545454546,0.8636363636363636,0.787878787878788
+ufrn_liquidacoes_metadados,1.0,0.40909090909090906,0.9545454545454546,0.5712467917120857
+ufrn_matriculados_turma_graduacao_metadados,1.0,0.4117647058823529,0.8235294117647058,1.0
