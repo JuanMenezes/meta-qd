@@ -3,21 +3,89 @@
     "n_linhas": 62,
     "n_colunas": 7,
     "tipagem_das_colunas": {
-        "NOME_CURSO": "object",
-        "MUNICIPIO": "object",
-        "MODALIDADE_EDUCACAO": "object",
-        "TIPO_OFERTA": "object",
-        "AREA_CONHECIMENTO": "object",
+        "NOME_CURSO": "string",
+        "MUNICIPIO": "string",
+        "MODALIDADE_EDUCACAO": "string",
+        "TIPO_OFERTA": "string",
+        "AREA_CONHECIMENTO": "string",
         "CODIGO_INEP": "int64",
-        "GRAU_ACADEMICO": "object"
+        "GRAU_ACADEMICO": "string"
     },
     "contador_tipagem": {
-        "object": 6,
+        "string": 6,
         "int64": 1
     },
     "estats_descritivas": {
+        "NOME_CURSO": {
+            "count": 62,
+            "unique": 62,
+            "top": "BACHARELADO EM ADMINISTRA\u00c7\u00c3O",
+            "freq": 1,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "MUNICIPIO": {
+            "count": 62,
+            "unique": 4,
+            "top": "RECIFE",
+            "freq": 44,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "MODALIDADE_EDUCACAO": {
+            "count": 62,
+            "unique": 2,
+            "top": "Presencial",
+            "freq": 53,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "TIPO_OFERTA": {
+            "count": 62,
+            "unique": 1,
+            "top": "Semestral",
+            "freq": 62,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "AREA_CONHECIMENTO": {
+            "count": 62,
+            "unique": 9,
+            "top": "Ci\u00eancias Exatas e da Terra",
+            "freq": 15,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "CODIGO_INEP": {
             "count": 62.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 641058.1935483871,
             "std": 1000041.7361258322,
             "min": 14500.0,
@@ -25,6 +93,19 @@
             "50%": 108377.5,
             "75%": 1152653.75,
             "max": 5000965.0
+        },
+        "GRAU_ACADEMICO": {
+            "count": 62,
+            "unique": 3,
+            "top": "BACHARELADO",
+            "freq": 36,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
         }
     },
     "nome_das_colunas": [

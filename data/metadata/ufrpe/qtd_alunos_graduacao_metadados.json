@@ -3,18 +3,34 @@
     "n_linhas": 45,
     "n_colunas": 4,
     "tipagem_das_colunas": {
-        "CURSO": "object",
+        "CURSO": "string",
         "ATIVO": "int64",
         "ATIVO - FORMANDO": "int64",
         "TRANCADO": "int64"
     },
     "contador_tipagem": {
-        "object": 1,
+        "string": 1,
         "int64": 3
     },
     "estats_descritivas": {
+        "CURSO": {
+            "count": 45,
+            "unique": 45,
+            "top": "BACHARELADO EM ADMINISTRA\u00c7\u00c3O",
+            "freq": 1,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "ATIVO": {
             "count": 45.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 280.0444444444444,
             "std": 126.49271548475457,
             "min": 1.0,
@@ -25,6 +41,9 @@
         },
         "ATIVO - FORMANDO": {
             "count": 45.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 4.0,
             "std": 5.397811004135254,
             "min": 0.0,
@@ -35,6 +54,9 @@
         },
         "TRANCADO": {
             "count": 45.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 2.1333333333333333,
             "std": 2.7601053998320095,
             "min": 0.0,

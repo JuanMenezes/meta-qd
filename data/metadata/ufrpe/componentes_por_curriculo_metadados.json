@@ -3,25 +3,54 @@
     "n_linhas": 4846,
     "n_colunas": 11,
     "tipagem_das_colunas": {
-        "NOME_CURSO": "object",
-        "CODIGO_CURRICULO": "object",
+        "NOME_CURSO": "string",
+        "CODIGO_CURRICULO": "string",
         "SEMESTRE_CONCLUSAO_MAX": "int64",
         "SEMESTRE_CONCLUSAO_IDEAL": "int64",
         "SEMESTRE_CONCLUSAO_MIN": "int64",
         "ANO_ENTRADA_VIGOR": "int64",
         "PERIODO_ENTRADA_VIGOR": "int64",
-        "CODIGO_COMPONENTE": "object",
-        "NOME_COMPONENTE": "object",
+        "CODIGO_COMPONENTE": "string",
+        "NOME_COMPONENTE": "string",
         "SEMESTRE_OFERTA_COMPONENTE": "int64",
-        "TIPO_VINCULO": "object"
+        "TIPO_VINCULO": "string"
     },
     "contador_tipagem": {
-        "object": 5,
+        "string": 5,
         "int64": 6
     },
     "estats_descritivas": {
+        "NOME_CURSO": {
+            "count": 4846,
+            "unique": 46,
+            "top": "LICENCIATURA EM QU\u00cdMICA",
+            "freq": 280,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "CODIGO_CURRICULO": {
+            "count": 4846,
+            "unique": 63,
+            "top": "33D",
+            "freq": 148,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "SEMESTRE_CONCLUSAO_MAX": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 9.39702847709451,
             "std": 1.0251851462647164,
             "min": 6.0,
@@ -32,6 +61,9 @@
         },
         "SEMESTRE_CONCLUSAO_IDEAL": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 9.420553033429632,
             "std": 0.9683231511487536,
             "min": 6.0,
@@ -42,6 +74,9 @@
         },
         "SEMESTRE_CONCLUSAO_MIN": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 15.86545604622369,
             "std": 1.55519551643917,
             "min": 10.0,
@@ -52,6 +87,9 @@
         },
         "ANO_ENTRADA_VIGOR": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 2014.1460998761866,
             "std": 10.907421293553249,
             "min": 1900.0,
@@ -62,6 +100,9 @@
         },
         "PERIODO_ENTRADA_VIGOR": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 1.4698720594304582,
             "std": 0.49914298496317233,
             "min": 1.0,
@@ -70,8 +111,37 @@
             "75%": 2.0,
             "max": 2.0
         },
+        "CODIGO_COMPONENTE": {
+            "count": 4846,
+            "unique": 2836,
+            "top": "04341",
+            "freq": 40,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
+        "NOME_COMPONENTE": {
+            "count": 4846,
+            "unique": 2534,
+            "top": "L\u00cdNGUA BRASILEIRA DE SINAIS - LIBRAS",
+            "freq": 54,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
+        },
         "SEMESTRE_OFERTA_COMPONENTE": {
             "count": 4846.0,
+            "unique": NaN,
+            "top": NaN,
+            "freq": NaN,
             "mean": 2.668179942220388,
             "std": 3.04491432897763,
             "min": 0.0,
@@ -79,6 +149,19 @@
             "50%": 1.0,
             "75%": 5.0,
             "max": 11.0
+        },
+        "TIPO_VINCULO": {
+            "count": 4846,
+            "unique": 2,
+            "top": "OBRIGAT\u00d3RIO",
+            "freq": 2777,
+            "mean": NaN,
+            "std": NaN,
+            "min": NaN,
+            "25%": NaN,
+            "50%": NaN,
+            "75%": NaN,
+            "max": NaN
         }
     },
     "nome_das_colunas": [

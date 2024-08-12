@@ -9,7 +9,7 @@ from collections import Counter
 
 # ? ____________ VARIAVEIS GLOBAIS ___________________
 
-ies = 'ufrn'
+ies = 'ufrpe'
 
 
 # ? ____________________ INICIO CRIAÇÃO DOS METADADOS ___________________ OK
@@ -53,7 +53,35 @@ def gerar_metadados(**op_kwargs):
 # !
 # ? ____________________ INICIO CRIAÇÃO DOS CRITERIOS ________________ ON GOING
 
-file_checks = {
+file_checks_ufrn = {
+    'ensino_de_graduacao_dic_ufrn': {
+        'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
+        'checks': {
+            'id_curso': {'unique': True, 'nulls': False},
+            'nome': {'regex': r'^[a-zA-Z ]+$'}
+        }
+    },
+    'componentes_por_curriculo_dic_ufrn': {
+        'path': 'data/source/ufrn/componentes_por_curriculo/componentes_por_curriculo.csv',
+        'checks': {
+            'id_curriculo': {'unique': True, 'nulls': False}
+        }
+    },
+    'liquidacoes_dic_ufrn': {
+        'path': 'data/source/ufrn/liquidacoes/liquidacoes.csv',
+        'checks': {
+            'cod_empenho': {'unique': True, 'nulls': False}
+        }
+    },
+    'matriculados_turma_graduacao_dic_ufrn': {
+        'path': 'data/source/ufrn/matriculados_turma_graduacao/matriculados_turma_graduacao.csv',
+        'checks': {
+            'matricula': {'unique': True, 'nulls': False}
+        }
+    },
+}
+
+file_checks_ufrpe = {
     'ensino_de_graduacao_dic_ufrn': {
         'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
         'checks': {
@@ -156,7 +184,7 @@ def avaliacoes_criterios(**op_kwargs):
         '''
 
         # ________________Cálculo da precisão________________ OK
-        precisao = calcular_precisao(file_checks[f'{table_name}_{ies}'])
+        precisao = calcular_precisao(f'{table_name}_{ies}')
 
         # _________INICIO_____ SAVING ON CSV ______________
         nome_arquivo_csv = f'data/analysis/metricas_{ies}.csv'
