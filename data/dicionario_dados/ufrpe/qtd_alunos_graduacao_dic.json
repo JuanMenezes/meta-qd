@@ -1,0 +1,8 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "CURSO": "string",
+        "ATIVO": "int64",
+        "ATIVO - FORMANDO": "int64",
+        "TRANCADO": "int64"
+    }
+}

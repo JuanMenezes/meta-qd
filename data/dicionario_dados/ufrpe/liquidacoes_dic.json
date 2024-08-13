@@ -1,0 +1,28 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "ID Unidade Or\u00e7ament\u00e1ria": "int64",
+        "Unidade Or\u00e7ament\u00e1ria": "string",
+        "ID \u00d3rg\u00e3o UGE": "int64",
+        "\u00d3rg\u00e3o UGE": "string",
+        "Id A\u00e7\u00e3o Governo": "string",
+        "A\u00e7\u00e3o Governo": "string",
+        "PTRES": "int64",
+        "ID Fonte Recursos": "int64",
+        "Fonte Recursos Detalhada": "string",
+        "ID PI": "string",
+        "PI": "string",
+        "NE CCor": "string",
+        "ID Natureza Despesa Detalhada": "int64",
+        "Natureza Despesa Detalhada": "string",
+        "Doc - Tipo": "string",
+        "Unnamed: 15": "string",
+        "Documento Origem": "string",
+        "Documento": "string",
+        "Doc - Observa\u00e7\u00e3o": "string",
+        "M\u00eas Lan\u00e7amento": "datetime",
+        "ID Resultado Lei": "int64",
+        "Resultado Lei": "string",
+        "DESPESAS LIQUIDADAS": "float64",
+        "DESPESAS LIQUIDADAS A PAGAR": "float64"
+    }
+}

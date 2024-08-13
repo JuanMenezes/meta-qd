@@ -1,0 +1,14 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "ANO": "int64",
+        "PERIODO": "int64",
+        "CODIGO_COMPONENTE": "string",
+        "CODIGO_TURMA": "string",
+        "TOTAL": "int64",
+        "APROVADO": "int64",
+        "REPROVADO": "int64",
+        "DISPENSADO": "int64",
+        "TRANCADO": "int64",
+        "DESISTENCIA": "int64"
+    }
+}

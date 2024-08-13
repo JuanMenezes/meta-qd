@@ -28,8 +28,8 @@ def verificar_e_consertar_tipos(df):
 
 
 def gerar_metadados(**op_kwargs):
-    df = pd.read_csv(op_kwargs['input_path'], delimiter=';')
-    # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrn para ,
+    df = pd.read_csv(op_kwargs['input_path'], delimiter=',')
+    # ! quando for para rodar os dados da ufrn o delimiter que ser modificado para ; e quando for ufrpe para ,
 
     df = verificar_e_consertar_tipos(df)  # Verifica e ajusta os tipos de dados
     # Coletar metadados após a verificação de tipo
@@ -82,59 +82,52 @@ file_checks_ufrn = {
 }
 
 file_checks_ufrpe = {
-    'ensino_de_graduacao_dic_ufrn': {
-        'path': 'data/source/ufrn/ensino_de_graduacao/ensino_de_graduacao.csv',
+    'censo_dic_ufrpe': {
+        'path': 'data/source/ufrpe/censo_cursos/censo_cursos.csv',
         'checks': {
-            'id_curso': {'unique': True, 'nulls': False},
-            'nome': {'regex': r'^[a-zA-Z ]+$'}
+            'NO_MUNICIPIO': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
-    'componentes_por_curriculo_dic_ufrn': {
-        'path': 'data/source/ufrn/componentes_por_curriculo/componentes_por_curriculo.csv',
+    'ensino_de_graduacao_dic_ufrpe': {
+        'path': 'data/source/ufrpe/ensino_de_graduacao/ensino_de_graduacao.csv',
         'checks': {
-            'id_curriculo': {'unique': True, 'nulls': False}
+            'CODIGO_INEP': {'unique': True, 'nulls': False},
+            'NOME_CURSO': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
-    'liquidacoes_dic_ufrn': {
-        'path': 'data/source/ufrn/liquidacoes/liquidacoes.csv',
+    'componentes_por_curriculo_dic_ufrpe': {
+        'path': 'data/source/ufrpe/componentes_por_curriculo/componentes_por_curriculo.csv',
         'checks': {
-            'cod_empenho': {'unique': True, 'nulls': False}
+            'CODIGO_COMPONENTE': {'unique': True, 'nulls': False},
+            'NOME_COMPONENTE': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
-    'matriculados_turma_graduacao_dic_ufrn': {
-        'path': 'data/source/ufrn/matriculados_turma_graduacao/matriculados_turma_graduacao.csv',
+    'liquidacoes_dic_ufrpe': {
+        'path': 'data/source/ufrpe/liquidacoes/liquidacoes.csv',
         'checks': {
-            'matricula': {'unique': True, 'nulls': False}
+            'Unidade Or\u00e7ament\u00e1ria': {'regex': r'^[a-zA-Z ]+$'}
         }
     },
+    'matriculados_turma_graduacao_dic_ufrpe': {
+        'path': 'data/source/ufrpe/matriculados_turma_graduacao/matriculados_turma_graduacao.csv',
+        'checks': {
+            'CODIGO_COMPONENTE': {'nulls': False}
+        }
+    },
+    'qtd_alunos_graduacao_dic_ufrpe': {
+        'path': 'data/source/ufrpe/qtd_alunos_graduacao/qtd_alunos_graduacao.csv',
+        'checks': {
+            'CURSO': {'regex': r'^[a-zA-Z ]+$', 'nulls': False}
+        }
+    }
 }
 
 
-def calcular_precisao(file_checks):
-    path = file_checks['path']
-    checks = file_checks['checks']
-    df = pd.read_csv(path, delimiter=';')
-
-    resultados = {}
-    total_records = len(df)
-
-    for coluna, crits in checks.items():
-        if 'unique' in crits:
-            unique_pass_rate = (total_records - df[coluna].duplicated().sum()) / total_records
-            print(f'unique_pass_rate {unique_pass_rate}')
-            resultados[f'{coluna}_unique'] = unique_pass_rate
-
-        if 'nulls' in crits:
-            non_nulls_rate = df[coluna].notnull().mean()
-            resultados[f'{coluna}_nulls'] = non_nulls_rate
-
-        if 'regex' in crits:
-            regex_pass_rate = df[coluna].str.match(crits['regex']).mean()
-            resultados[f'{coluna}_regex'] = regex_pass_rate
-
-    # Calcula a média de precisão para o arquivo
-    average_precision = sum(resultados.values()) / len(resultados)
-    return average_precision
+def detectar_outliers(tipagem_real, coluna_nome, estats):
+    # Se a coluna for numérica e o desvio padrão for muito alto, consideramos que há imprecisão
+    if tipagem_real[coluna_nome] in ['int64', 'float64'] and estats['std'] > (estats['mean'] * 2):  # Exemplo de threshold arbitrário
+        return 1
+    return 0
 
 
 def verificar_tipos(metadados, dic_dados):
@@ -154,37 +147,45 @@ def avaliacoes_criterios(**op_kwargs):
 
         parte_especificada, file_name_sem_extensao = os.path.split(file_path_dicionario)
         table_name = str(file_name_sem_extensao.split(".")[0])
-        
         # ? _________ Carga dos arquivos em json _________
         with open(file_path_metadados, 'r') as arquivo:
             json_metadado = json.load(arquivo)
 
         with open(file_path_dicionario, 'r') as arquivo_dic:
             json_dic = json.load(arquivo_dic)
-
-        inconsistencias_retornadas = verificar_tipos(json_metadado, json_dic)
-
-        # !_____________Cálculo da confiabilidade ________________
+        
+        tipagem_real = json_metadado['tipagem_das_colunas']
+        tipagem_esperada = json_dic['tipagem_das_colunas_disponibilizadas']
         n_colunas = json_metadado['n_colunas']
-        quantidade_object = json_metadado['contador_tipagem'].get("object",0)
-        confiabilidade = (n_colunas - quantidade_object) / n_colunas
+        n_linhas = json_metadado['n_linhas']
+        valores_nulos = json_metadado['valores_nulos_por_coluna']
+        valores_distintos = json_metadado['valores_distintos_por_coluna']
+
+        # Calcular discrepância de tipos
+        discrepancia_tipos = sum(1 for col in tipagem_real if tipagem_real[col] != tipagem_esperada[col])
+
+        # _____________Cálculo da confiabilidade ________________
+        confiabilidade = (n_colunas - discrepancia_tipos) / n_colunas
 
         # _____________ Cálculo da completude ________________ OK
-        n_colunas = len(json_metadado["valores_nulos_por_coluna"])
-        n_valores_nulos_coluna = sum(value == 0 for value in json_metadado["valores_nulos_por_coluna"].values())
-        completude = (1 - (n_valores_nulos_coluna / n_colunas))
+        total_valores = n_linhas * n_colunas
+        total_nulos = sum(valores_nulos.values())
+        completude = (total_valores - total_nulos) / total_valores
 
         # ________________Cálculo da consistência _______________ OK
-        consistencia = (1 - (inconsistencias_retornadas / n_colunas))
+        inconsistencias = sum(1 for col, valores in valores_distintos.items() if tipagem_real[col] == 'int64' and valores > 100)
+        consistencia = 1 - (inconsistencias / n_colunas)
         '''
             Considerações para Refinamento
                 Granularidade: Como a função atual não considera quantas linhas em cada coluna têm tipos inconsistentes, essa métrica pode subestimar o impacto real das inconsistências isso poderia ser um ponto interessante de evolução
                 Ponderação por Importância da Coluna: Se algumas colunas são mais críticas para a integridade dos  dados do que outras, isso pode ser feito dando mais peso para as colunas obrigatorias
                 Extensão para Outras Inconsistências: Trabalhos futuros expandir a definição de consistência para incluir outros tipos de inconsistências (como inconsistências lógicas entre colunas, por exemplo), a fórmula pode ser adaptada para incorporar esses diferentes tipos com seus respectivos pesos.
         '''
+        # Aplicar a função de detecção de outliers
+        inconsistencias_precisao = sum(detectar_outliers(tipagem_real, col, json_metadado['estats_descritivas'][col]) for col in json_metadado['estats_descritivas'])
 
         # ________________Cálculo da precisão________________ OK
-        precisao = calcular_precisao(f'{table_name}_{ies}')
+        precisao = 1 - (inconsistencias_precisao / n_colunas)
 
         # _________INICIO_____ SAVING ON CSV ______________
         nome_arquivo_csv = f'data/analysis/metricas_{ies}.csv'

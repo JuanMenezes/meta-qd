@@ -1,0 +1,11 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "NOME_CURSO": "string",
+        "MUNICIPIO": "string",
+        "MODALIDADE_EDUCACAO": "string",
+        "TIPO_OFERTA": "string",
+        "AREA_CONHECIMENTO": "string",
+        "CODIGO_INEP": "int64",
+        "GRAU_ACADEMICO": "string"
+    }
+}

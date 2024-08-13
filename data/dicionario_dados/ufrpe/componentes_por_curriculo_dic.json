@@ -1,0 +1,15 @@
+{
+    "tipagem_das_colunas_disponibilizadas": {
+        "NOME_CURSO": "string",
+        "CODIGO_CURRICULO": "string",
+        "SEMESTRE_CONCLUSAO_MAX": "int64",
+        "SEMESTRE_CONCLUSAO_IDEAL": "int64",
+        "SEMESTRE_CONCLUSAO_MIN": "int64",
+        "ANO_ENTRADA_VIGOR": "int64",
+        "PERIODO_ENTRADA_VIGOR": "int64",
+        "CODIGO_COMPONENTE": "string",
+        "NOME_COMPONENTE": "string",
+        "SEMESTRE_OFERTA_COMPONENTE": "int64",
+        "TIPO_VINCULO": "string"
+    }
+}
