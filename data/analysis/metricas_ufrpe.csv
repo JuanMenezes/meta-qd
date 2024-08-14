@@ -1,7 +1,7 @@
-nome_da_tabela,confiabilidade,completude,consistencia,precisao
-ufrpe_censo_cursos_metadados,1.0,1.0,1.0,0.8
-ufrpe_componentes_por_curriculo_metadados,1.0,1.0,1.0,1.0
-ufrpe_ensino_de_graduacao_metadados,1.0,1.0,1.0,1.0
-ufrpe_liquidacoes_metadados,0.875,0.9999662262570587,0.9583333333333334,1.0
-ufrpe_matriculados_turma_graduacao_metadados,1.0,1.0,1.0,0.7
-ufrpe_qtd_alunos_graduacao_metadados,1.0,1.0,1.0,1.0
+nome_da_tabela,id_tabela,credibilidade,completude,consistencia,precisao
+ufrpe_ensino_de_graduacao_metadados,1, 1.0,1.0,1.0,1.0
+ufrpe_componentes_por_curriculo_metadados,2, 1.0,1.0,1.0,1.0
+ufrpe_liquidacoes_metadados,3,0.875,0.9999662262570587,0.9583333333333334,1.0
+ufrpe_matriculados_turma_graduacao_metadados,4, 1.0,1.0,1.0,0.7
+ufrpe_qtd_alunos_graduacao_metadados,5,1.0,1.0,1.0,1.0
+ufrpe_censo_cursos_metadados,6,1.0,1.0,1.0,0.8
